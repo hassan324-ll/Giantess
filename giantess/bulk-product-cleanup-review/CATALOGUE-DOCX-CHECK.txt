@@ -1,0 +1,22 @@
+Catalogue DOCX image replacement check
+======================================
+
+Source:
+C:\Users\moham\Downloads\GIANTESS+parts+2026+e-catalogue.docx
+
+Results:
+- Embedded catalogue media files: 1184
+- Catalogue images under 150px: 714
+- Catalogue images under 500px: 1182
+- Catalogue images at least 500px: 2
+- Catalogue product rows read from Word tables: 1144
+- Direct current-image matches by normalized product name: 543
+- Safe sharp replacements found: 0
+
+The DOCX stores low-resolution catalogue thumbnails. It does not contain suitable
+non-blurry source images for the bulk product image set. Five direct matches had a
+slightly larger DOCX thumbnail, but visual inspection showed different views or
+variants and the files were still only 96px to 166px. They were not applied.
+
+Use original supplier images, product-page downloads, or a higher-resolution
+catalogue export for replacement work.

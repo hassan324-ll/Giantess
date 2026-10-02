@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="96" viewBox="0 0 160 96" role="img" aria-labelledby="title">
+  <title id="title">Brand image placeholder</title>
+  <rect width="160" height="96" rx="12" fill="#eef2f7"/>
+  <rect x="20" y="22" width="120" height="52" rx="8" fill="#dbe4ef"/>
+  <path d="M46 58h68" stroke="#8ca0b6" stroke-width="7" stroke-linecap="round"/>
+  <path d="M55 40h50" stroke="#8ca0b6" stroke-width="7" stroke-linecap="round"/>
+</svg>

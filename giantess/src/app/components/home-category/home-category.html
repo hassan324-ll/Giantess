@@ -1,0 +1,28 @@
+<section id="home-categories" class="home-categories" aria-labelledby="home-categories-title">
+  <div class="home-categories__inner">
+    <h2 id="home-categories-title" class="home-categories__title">Shop By Categories</h2>
+
+    <div class="home-categories__list">
+      @for (category of categories; track category.name) {
+        <a
+          class="category-card"
+          routerLink="/home"
+          [fragment]="category.anchorId"
+          [id]="category.anchorId"
+          [attr.aria-label]="'Shop ' + category.name"
+        >
+          <span class="category-card__media">
+            <img
+              class="category-card__image {{ category.imageClass ?? '' }}"
+              [src]="category.imagePath"
+              [alt]="category.name"
+              [attr.loading]="category.priority ? 'eager' : 'lazy'"
+              [attr.fetchpriority]="category.priority ? 'high' : null"
+            />
+          </span>
+          <span class="category-card__name">{{ category.name }}</span>
+        </a>
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,47 @@
+<section id="faqs" class="bg-[#f7fbff] px-4 py-14 text-[#172033] sm:px-6 sm:py-18 lg:px-8">
+  <div class="mx-auto w-full max-w-[980px]">
+    <div class="mx-auto max-w-[680px] text-center">
+      <div class="mx-auto mb-5 grid h-11 w-11 place-items-center rounded-full bg-white text-[#1e63da] shadow-[0_14px_34px_rgba(30,99,218,0.12)]">
+        <fa-icon [icon]="faQuestion"></fa-icon>
+      </div>
+      <p class="text-xs font-black uppercase tracking-[0.28em] text-[#1fb4d9]">B2B Support</p>
+      <h2 class="mt-3 text-4xl font-black leading-[1.08] text-[#172033] sm:text-5xl">
+        Frequently
+        <span class="block">Asked Questions</span>
+      </h2>
+    </div>
+
+    <div class="mt-10 grid gap-4">
+      @for (faq of faqs; track faq.question; let index = $index) {
+        <article
+          class="overflow-hidden rounded-[28px] border border-[#dce8f8] bg-[#eef4ff] shadow-[0_18px_44px_rgba(20,71,167,0.07)] transition duration-200"
+          [class.bg-white]="openIndex() === index"
+          [class.shadow-[0_22px_54px_rgba(20,71,167,0.12)]]="openIndex() === index"
+        >
+          <button
+            type="button"
+            class="flex min-h-[68px] w-full items-center justify-between gap-5 px-6 py-4 text-left sm:px-8"
+            [attr.aria-expanded]="openIndex() === index"
+            (click)="toggleFaq(index)"
+          >
+            <span class="text-base font-black leading-6 text-[#1f2f45]">
+              {{ faq.question }}
+            </span>
+            <span class="grid h-11 w-11 flex-none place-items-center rounded-full bg-white text-sm text-[#1e63da] shadow-[0_10px_24px_rgba(20,71,167,0.10)]">
+              <fa-icon [icon]="openIndex() === index ? faMinus : faPlus"></fa-icon>
+            </span>
+          </button>
+
+          @if (openIndex() === index) {
+            <div class="px-6 pb-7 sm:px-8">
+              <div class="h-px bg-[#e5eefb]"></div>
+              <p class="mt-5 max-w-[820px] text-sm font-semibold leading-7 text-[#5a687a] sm:text-[15px]">
+                {{ faq.answer }}
+              </p>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  </div>
+</section>

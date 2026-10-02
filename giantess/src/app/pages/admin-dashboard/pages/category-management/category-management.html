@@ -1,0 +1,132 @@
+<div class="management-page">
+  <div class="management-header">
+    <div>
+      <h2>Category Management</h2>
+      <p>Associate categories with brands and keep your taxonomy clean.</p>
+    </div>
+    <button class="primary-button" type="button" (click)="showCreateForm()">Create category</button>
+  </div>
+
+  <div class="feedback-row" *ngIf="errorMessage() || successMessage()">
+    <span class="error" *ngIf="errorMessage()">{{ errorMessage() }}</span>
+    <span class="success" *ngIf="successMessage()">{{ successMessage() }}</span>
+  </div>
+
+  <div class="filter-row" *ngIf="brands().length">
+    <label class="filter-label">
+      Brand filter
+      <select [value]="selectedBrandSlug() || ''" (change)="onBrandFilterChange($event)">
+        <option value="" disabled>Select a brand</option>
+        <option *ngFor="let brand of brands()" [value]="brand.slug">{{ brand.name }}</option>
+      </select>
+    </label>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading-state">
+    <app-loading-spinner label="Loading categories"></app-loading-spinner>
+  </div>
+
+  <table class="management-table" *ngIf="!isLoading() && categories().length">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Category</th>
+        <th>Brand</th>
+        <th>Slug</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let category of categories(); let categoryIndex = index">
+        <td class="sequence-cell">{{ categoryIndex + 1 }}</td>
+        <td>{{ category.name }}</td>
+        <td>{{ category.brand?.name || 'Unassigned' }}</td>
+        <td>{{ category.slug }}</td>
+        <td>
+          <div class="table-actions">
+            <button
+              class="action-btn edit"
+              type="button"
+              (click)="showEditForm(category)"
+              title="Edit {{ category.name }}"
+              aria-label="Edit {{ category.name }}"
+            >
+              <fa-icon [icon]="faPencilAlt"></fa-icon>
+            </button>
+            <button
+              class="action-btn delete"
+              type="button"
+              (click)="confirmDelete(category)"
+              title="Delete {{ category.name }}"
+              aria-label="Delete {{ category.name }}"
+            >
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!isLoading() && !categories().length" class="empty-state">
+    No categories found. Create one using the button above.
+  </div>
+
+  <section class="modal-backdrop" *ngIf="modalOpen()">
+    <div class="modal-panel">
+      <h3>{{ activeCategoryId ? 'Edit Category' : 'Create Category' }}</h3>
+      <form [formGroup]="categoryForm" (ngSubmit)="submitCategory()" class="modal-form">
+        <label class="form-field">
+          <span class="field-label">Category name</span>
+          <span class="field-control">
+            <fa-icon [icon]="faTag"></fa-icon>
+            <input formControlName="name" placeholder="Enter category name" />
+          </span>
+          <span class="field-error" *ngIf="categoryForm.controls['name'].invalid && categoryForm.controls['name'].touched">
+            Category name is required and must be at least 2 characters.
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Category slug</span>
+          <span class="field-control">
+            <fa-icon [icon]="faLink"></fa-icon>
+            <input formControlName="slug" placeholder="category-slug" />
+          </span>
+          <span class="field-error" *ngIf="categoryForm.controls['slug'].invalid && categoryForm.controls['slug'].touched">
+            Slug is required and should be lowercase alphanumeric with dashes.
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Brand</span>
+          <span class="field-control">
+            <fa-icon [icon]="faBox"></fa-icon>
+            <select formControlName="brand_id">
+              <option value="" disabled>Select a brand</option>
+              <option *ngFor="let brand of brands()" [value]="brand.id">{{ brand.name }}</option>
+            </select>
+          </span>
+          <span class="field-error" *ngIf="categoryForm.controls['brand_id'].invalid && categoryForm.controls['brand_id'].touched">
+            A parent brand selection is required.
+          </span>
+        </label>
+
+        <div class="modal-actions">
+          <button class="secondary-button" type="button" (click)="closeModal()">Cancel</button>
+          <button class="primary-button" type="submit" [disabled]="formLoading()">
+            {{ formLoading() ? 'Saving...' : activeCategoryId ? 'Update category' : 'Create category' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <app-confirm-dialog
+    [visible]="confirmOpen()"
+    title="Delete category"
+    message="Are you sure you want to delete this category? This cannot be undone."
+    (confirm)="deleteCategory()"
+    (cancel)="closeModal()"
+  ></app-confirm-dialog>
+</div>

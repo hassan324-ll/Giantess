@@ -1,0 +1,152 @@
+<section class="min-h-screen bg-[#f6f6f6] px-4 py-12 text-[#111827] sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-6xl">
+    <nav class="mb-8 flex flex-wrap items-center gap-3 text-sm font-semibold">
+      <a
+        routerLink="/home"
+        class="rounded-full bg-white px-4 py-2 text-[#1e63da] shadow-sm transition hover:-translate-y-0.5 hover:text-[#00aeef]"
+      >
+        Home
+      </a>
+      <span class="text-slate-400">/</span>
+      <a
+        [routerLink]="['/brands', brandSlug(), 'categories']"
+        class="rounded-full bg-white px-4 py-2 text-[#1e63da] shadow-sm transition hover:-translate-y-0.5 hover:text-[#00aeef]"
+      >
+        {{ getBrandName() }}
+      </a>
+      <span class="text-slate-400">/</span>
+      <a
+        [routerLink]="['/brands', brandSlug(), 'categories', categorySlug(), 'models']"
+        class="rounded-full bg-white px-4 py-2 text-[#1e63da] shadow-sm transition hover:-translate-y-0.5 hover:text-[#00aeef]"
+      >
+        {{ getCategoryName() }}
+      </a>
+      <span class="text-slate-400">/</span>
+      <span class="rounded-full bg-[#e8f7ff] px-4 py-2 text-[#008fd0]">
+        {{ getModelName() || 'Loading model' }}
+      </span>
+    </nav>
+
+    @if (model()) {
+      <div class="overflow-hidden rounded-[18px] bg-white shadow-[0_22px_60px_rgba(15,23,42,0.08)]">
+        <div class="grid gap-0 md:grid-cols-[0.9fr_1.1fr]">
+          <div class="flex min-h-72 items-center justify-center bg-[#eef4ff] p-8">
+            <img
+              class="max-h-60 w-full object-contain"
+              [src]="model()?.image_url || model()?.image || productImage"
+              [alt]="getModelName()"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+
+          <div class="p-7 sm:p-9">
+            <p class="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-[#00aeef]">
+              Product Catalog
+            </p>
+            <h1 class="text-3xl font-black leading-tight text-[#172033] sm:text-4xl">
+              {{ getModelName() }}
+            </h1>
+            <p class="mt-4 max-w-2xl text-sm font-semibold leading-7 text-slate-600 sm:text-base">
+              Browse available products for {{ getModelName() }}. Each listing focuses on product information and a quick path to share inquiry details with our B2B team.
+            </p>
+            <a
+              href="mailto:info@giantess-cn.com"
+              class="mt-5 inline-flex rounded-full bg-[#e8f7ff] px-5 py-2 text-sm font-black text-[#1e63da] no-underline transition hover:bg-[#d9f2ff]"
+            >
+              info@giantess-cn.com
+            </a>
+            <div class="mt-7 flex flex-wrap gap-3">
+              <span class="rounded-full bg-[#e8f7ff] px-5 py-2 text-sm font-extrabold text-[#1e63da]">
+              {{ totalProducts() }} products
+              </span>
+              <span class="rounded-full bg-[#f0f9ff] px-5 py-2 text-sm font-extrabold text-[#008fd0]">
+                {{ getCategoryName() }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="overflow-hidden rounded-[18px] bg-white shadow-[0_22px_60px_rgba(15,23,42,0.08)]">
+        <div class="grid gap-0 md:grid-cols-[0.9fr_1.1fr]">
+          <div class="flex min-h-72 items-center justify-center bg-[#eef4ff] p-8">
+            <app-loading-spinner label="Loading model" size="large"></app-loading-spinner>
+          </div>
+          <div class="p-7 sm:p-9">
+            <div class="h-4 w-36 animate-pulse rounded-full bg-slate-100"></div>
+            <div class="mt-5 h-10 w-3/4 animate-pulse rounded-full bg-slate-100"></div>
+            <div class="mt-5 h-4 w-full animate-pulse rounded-full bg-slate-100"></div>
+            <div class="mt-3 h-4 w-2/3 animate-pulse rounded-full bg-slate-100"></div>
+            <div class="mt-7 flex flex-wrap gap-3">
+              <div class="h-10 w-28 animate-pulse rounded-full bg-slate-100"></div>
+              <div class="h-10 w-36 animate-pulse rounded-full bg-slate-100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <div class="mt-10">
+      @if (isLoading()) {
+        <div class="flex min-h-[320px] items-center justify-center rounded-[16px] bg-white shadow-[0_18px_45px_rgba(15,23,42,0.07)]">
+          <app-loading-spinner label="Loading products" size="large"></app-loading-spinner>
+        </div>
+      } @else if (errorMessage()) {
+        <div class="rounded-[14px] border border-red-100 bg-white p-7 text-sm font-semibold text-red-600 shadow-sm">
+          {{ errorMessage() }}
+        </div>
+      } @else if (!products().length) {
+        <div class="rounded-[14px] bg-white p-10 text-center shadow-[0_18px_45px_rgba(15,23,42,0.07)]">
+          <h2 class="text-2xl font-black text-[#172033]">No products found</h2>
+          <p class="mx-auto mt-3 max-w-lg text-sm font-semibold leading-6 text-slate-600">
+            This model does not have published products yet.
+          </p>
+        </div>
+      } @else {
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          @for (product of products(); track product.id) {
+            <a
+              [routerLink]="['/products', product.slug]"
+              class="group relative flex min-h-[315px] flex-col overflow-hidden rounded-[10px] border border-slate-100 bg-white text-inherit no-underline shadow-[0_14px_34px_rgba(15,23,42,0.07)] transition duration-300 hover:-translate-y-1 hover:border-[#00aeef]/35 hover:shadow-[0_20px_44px_rgba(0,174,239,0.15)] focus:outline-none focus:ring-2 focus:ring-[#00aeef] focus:ring-offset-2"
+              [attr.aria-label]="'View details for ' + product.name"
+            >
+              <span [class]="getStockBadgeClass(product)">
+                {{ getStockLabel(product) }}
+              </span>
+
+              <div class="flex h-52 items-center justify-center bg-[#f8fbff] p-4">
+                <img
+                  class="max-h-44 w-full object-contain transition duration-300 group-hover:scale-105"
+                  [src]="getProductImage(product)"
+                  [alt]="product.name"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+
+              <div class="flex flex-1 flex-col justify-between border-t border-slate-100 text-center">
+                <div class="px-4 py-3">
+                <h2 class="line-clamp-3 min-h-[3.75rem] text-[0.9rem] font-black leading-5 text-[#172033]">
+                  {{ product.name }}
+                </h2>
+                <p class="mt-2 h-4 overflow-hidden text-[0.68rem] font-bold uppercase tracking-[0.08em] text-slate-400">
+                  SKU Number: {{ product.sku || product.part_number || 'Available on request' }}
+                </p>
+                </div>
+                <div class="mt-auto border-t border-slate-200 bg-white px-4 py-2.5">
+                  <span class="inline-flex min-h-8 w-full items-center justify-center rounded-md border border-slate-200 bg-[#fbfbfb] px-3 text-base font-black text-red-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                    {{ getProductPrice(product) }}
+                  </span>
+                  <span class="mt-2 inline-flex min-h-8 w-full items-center justify-center rounded-full border border-[#d7dfef] bg-white px-3 text-[0.7rem] font-black text-[#1e63da]">
+                    Email info@giantess-cn.com
+                  </span>
+                </div>
+              </div>
+            </a>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>

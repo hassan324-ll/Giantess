@@ -1,0 +1,89 @@
+<section class="bg-[#eef4ff] px-4 py-12 text-[#273041] sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-6xl">
+    <a
+      routerLink="/home"
+      class="mb-8 inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-bold text-[#1e63da] shadow-sm transition hover:-translate-y-0.5 hover:text-[#1fb4d9]"
+    >
+      &#8249; Back to brands
+    </a>
+
+    <div class="grid items-center gap-8 rounded-[24px] bg-white p-6 shadow-[0_24px_70px_rgba(30,99,218,0.13)] md:grid-cols-[0.9fr_1.1fr] md:p-9">
+      <div class="flex min-h-64 items-center justify-center rounded-[20px] bg-[#f7fbff] p-8">
+        <img
+          class="max-h-52 w-full object-contain"
+          [src]="getBrandImage()"
+          [alt]="getBrandName()"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+
+      <div>
+        <p class="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-[#1fb4d9]">
+          Brand Categories
+        </p>
+        <h1 class="text-3xl font-black leading-tight text-[#172033] sm:text-4xl">
+          {{ getBrandName() }}
+        </h1>
+        <p class="mt-4 max-w-xl text-sm font-semibold leading-6 text-slate-600 sm:text-base">
+          Browse the product categories available for this brand, including devices, scanners, printers, parts, and accessories.
+        </p>
+        <div class="mt-7 inline-flex rounded-full bg-[#e8f7ff] px-5 py-2 text-sm font-extrabold text-[#1e63da]">
+          {{ categories().length }} categories available
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10">
+      @if (isLoading()) {
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+            <div class="min-h-56 animate-pulse rounded-[18px] bg-white p-6 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
+              <div class="h-12 w-12 rounded-full bg-slate-100"></div>
+              <div class="mt-8 h-5 w-40 rounded-full bg-slate-100"></div>
+              <div class="mt-4 h-3 w-full rounded-full bg-slate-100"></div>
+              <div class="mt-3 h-3 w-2/3 rounded-full bg-slate-100"></div>
+            </div>
+          }
+        </div>
+      } @else if (errorMessage()) {
+        <div class="rounded-[18px] border border-red-100 bg-white p-7 text-sm font-semibold text-red-600 shadow-sm">
+          {{ errorMessage() }}
+        </div>
+      } @else if (!categories().length) {
+        <div class="rounded-[18px] bg-white p-10 text-center shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
+          <h2 class="text-2xl font-black text-[#172033]">No categories found</h2>
+          <p class="mx-auto mt-3 max-w-lg text-sm font-semibold leading-6 text-slate-600">
+            This brand does not have published categories yet.
+          </p>
+        </div>
+      } @else {
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          @for (category of categories(); track category.id; let categoryIndex = $index) {
+            <a
+              [routerLink]="['/brands', brandSlug(), 'categories', category.slug, 'models']"
+              class="group relative block min-h-56 overflow-hidden rounded-[18px] bg-white p-6 text-inherit no-underline shadow-[0_18px_45px_rgba(15,23,42,0.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(30,99,218,0.16)]"
+              [attr.aria-label]="'View models for ' + category.name"
+            >
+              <div class="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#1fb4d9]/10 transition group-hover:bg-[#1e63da]/15"></div>
+              <div class="relative z-10">
+                <div class="grid h-14 w-14 place-items-center rounded-full bg-[linear-gradient(135deg,#1e63da_0%,#1fb4d9_100%)] text-xl font-black text-white shadow-[0_14px_30px_rgba(30,99,218,0.22)]">
+                  {{ categoryIndex + 1 }}
+                </div>
+                <h2 class="mt-8 text-xl font-black text-[#172033]">
+                  {{ category.name }}
+                </h2>
+                <p class="mt-3 text-sm font-semibold leading-6 text-slate-600">
+                  Explore {{ category.name }} products and parts for {{ getBrandName() }}.
+                </p>
+                <div class="mt-6 inline-flex rounded-full bg-[#00aeef] px-5 py-2 text-sm font-bold text-white shadow-[0_12px_24px_rgba(0,174,239,0.22)] transition group-hover:bg-[#008fd0]">
+                  View models
+                </div>
+              </div>
+            </a>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>

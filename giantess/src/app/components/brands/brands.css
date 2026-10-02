@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+/* Add smooth hover transitions */
+@media (prefers-reduced-motion: no-preference) {
+  .group > div {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}

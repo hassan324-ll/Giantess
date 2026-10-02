@@ -1,0 +1,248 @@
+<div class="management-page">
+  <div class="management-header">
+    <div>
+      <h2>Device Model Management</h2>
+      <p>Manage device models and assign them to categories.</p>
+    </div>
+    <div class="header-actions">
+      <button class="secondary-button" type="button" (click)="showBulkImport()">Bulk import</button>
+      <button class="primary-button" type="button" (click)="showCreateForm()">Create model</button>
+    </div>
+  </div>
+
+  <div class="feedback-row" *ngIf="errorMessage() || successMessage()">
+    <span class="error" *ngIf="errorMessage()">{{ errorMessage() }}</span>
+    <span class="success" *ngIf="successMessage()">{{ successMessage() }}</span>
+  </div>
+
+  <div class="filter-panel" *ngIf="brands().length">
+    <div class="filter-row">
+      <label class="filter-label">
+        <span>Brand</span>
+        <span class="filter-control">
+          <fa-icon [icon]="faBoxesStacked"></fa-icon>
+          <select [value]="selectedBrandSlug() || ''" (change)="onBrandFilterChange($event)">
+            <option value="" disabled>Select a brand</option>
+            <option *ngFor="let brand of brands()" [value]="brand.slug">{{ brand.name }}</option>
+          </select>
+        </span>
+      </label>
+
+      <label class="filter-label">
+        <span>Category</span>
+        <span class="filter-control">
+          <fa-icon [icon]="faTag"></fa-icon>
+          <select
+            [value]="selectedCategorySlug() || ''"
+            (change)="onCategoryFilterChange($event)"
+            [disabled]="!categories().length"
+          >
+            <option value="" disabled>Select a category</option>
+            <option *ngFor="let category of categories()" [value]="category.slug">{{ category.name }}</option>
+          </select>
+        </span>
+      </label>
+    </div>
+
+    <div class="filter-summary">
+      <span>{{ models().length }} models</span>
+      <span>{{ categories().length }} categories</span>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading-state">
+    <app-loading-spinner label="Loading device models"></app-loading-spinner>
+  </div>
+
+  <table class="management-table" *ngIf="!isLoading() && models().length">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Image</th>
+        <th>Model</th>
+        <th>Category</th>
+        <th>Slug</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let model of paginatedModels(); let modelIndex = index">
+        <td class="sequence-cell">{{ (currentPage() - 1) * pageSize + modelIndex + 1 }}</td>
+        <td>
+          <img
+            *ngIf="model.image_url || model.image"
+            [src]="model.image_url || model.image"
+            alt="{{ model.name }}"
+            class="table-image"
+          />
+          <span *ngIf="!model.image_url && !model.image">No image</span>
+        </td>
+        <td>{{ model.name }}</td>
+        <td>{{ getCategoryName(model) }}</td>
+        <td>{{ model.slug }}</td>
+        <td>
+          <div class="table-actions">
+            <button
+              class="action-btn edit"
+              type="button"
+              (click)="showEditForm(model)"
+              title="Edit {{ model.name }}"
+              aria-label="Edit {{ model.name }}"
+            >
+              <fa-icon [icon]="faPencilAlt"></fa-icon>
+            </button>
+            <button
+              class="action-btn delete"
+              type="button"
+              (click)="confirmDelete(model)"
+              title="Delete {{ model.name }}"
+              aria-label="Delete {{ model.name }}"
+            >
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <nav class="pagination" *ngIf="!isLoading() && models().length > pageSize" aria-label="Model pagination">
+    <span class="pagination-info">
+      Showing {{ pageStart() }}-{{ pageEnd() }} of {{ models().length }}
+    </span>
+    <div class="pagination-actions">
+      <button
+        class="secondary-button"
+        type="button"
+        [disabled]="currentPage() === 1"
+        (click)="changePage(currentPage() - 1)"
+      >
+        Previous
+      </button>
+      <span class="pagination-page">Page {{ currentPage() }} of {{ totalPages() }}</span>
+      <button
+        class="secondary-button"
+        type="button"
+        [disabled]="currentPage() === totalPages()"
+        (click)="changePage(currentPage() + 1)"
+      >
+        Next
+      </button>
+    </div>
+  </nav>
+
+  <div *ngIf="!isLoading() && !models().length" class="empty-state">
+    No device models available. Add one to start linking products.
+  </div>
+
+  <section class="modal-backdrop" *ngIf="modalOpen()">
+    <div class="modal-panel">
+      <h3>{{ activeModelId ? 'Edit Device Model' : 'Create Device Model' }}</h3>
+      <form [formGroup]="modelForm" (ngSubmit)="submitModel()" class="modal-form">
+        <label class="form-field">
+          <span class="field-label">Model name</span>
+          <span class="field-control">
+            <fa-icon [icon]="faMicrochip"></fa-icon>
+            <input formControlName="name" placeholder="Enter model name" aria-label="Model name" />
+          </span>
+          <span class="field-error" *ngIf="modelForm.controls['name'].invalid && modelForm.controls['name'].touched">
+            Model name is required and must be at least 2 characters.
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Model slug</span>
+          <span class="field-control">
+            <fa-icon [icon]="faLink"></fa-icon>
+            <input formControlName="slug" placeholder="model-slug" aria-label="Model slug" />
+          </span>
+          <span class="field-error" *ngIf="modelForm.controls['slug'].invalid && modelForm.controls['slug'].touched">
+            Slug is required and should be lowercase alphanumeric with dashes.
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Category</span>
+          <span class="field-control">
+            <fa-icon [icon]="faTag"></fa-icon>
+            <select formControlName="category_id">
+              <option value="" disabled>Select a category</option>
+              <option *ngFor="let category of categories()" [value]="category.id">{{ category.name }}</option>
+            </select>
+          </span>
+          <span class="field-error" *ngIf="modelForm.controls['category_id'].invalid && modelForm.controls['category_id'].touched">
+            A category selection is required.
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Model image</span>
+          <span class="field-control field-control--file">
+            <fa-icon [icon]="faImage"></fa-icon>
+            <input type="file" (change)="onImageSelected($event)" accept="image/*" aria-label="Model image file" />
+          </span>
+        </label>
+
+        <div class="image-preview" *ngIf="imagePreview()">
+          <img [src]="imagePreview()" alt="Selected model preview" />
+        </div>
+
+        <div class="modal-actions">
+          <button class="secondary-button" type="button" (click)="closeModal()">Cancel</button>
+          <button class="primary-button" type="submit" [disabled]="formLoading()">
+            {{ formLoading() ? 'Saving...' : activeModelId ? 'Update model' : 'Create model' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="modal-backdrop" *ngIf="bulkImportOpen()">
+    <div class="modal-panel">
+      <h3>Bulk import device models</h3>
+      <p class="modal-note">
+        Upload a CSV file with columns <strong>name, slug</strong>. The <strong>image_filename</strong> column is optional and image files can be attached later.
+        The selected category will be used for all imported models.
+      </p>
+      <form class="modal-form" novalidate (submit)="submitBulkImport($event)">
+        <label class="form-field">
+          <span class="field-label">CSV file</span>
+          <span class="field-control field-control--file">
+            <input type="file" (change)="onBulkCsvSelected($event)" accept=".csv" aria-label="Bulk import CSV file" />
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Image files</span>
+          <span class="field-control field-control--file">
+            <input type="file" (change)="onBulkImagesSelected($event)" accept="image/*" multiple aria-label="Bulk import image files" />
+          </span>
+        </label>
+
+        <div class="feedback-row" *ngIf="bulkImportError() || bulkImportSuccess()">
+          <span class="error" *ngIf="bulkImportError()">{{ bulkImportError() }}</span>
+          <span class="success" *ngIf="bulkImportSuccess()">{{ bulkImportSuccess() }}</span>
+        </div>
+
+        <div class="import-progress" *ngIf="bulkImportProgress()">
+          {{ bulkImportProgress() }}
+        </div>
+
+        <div class="modal-actions">
+          <button class="secondary-button" type="button" (click)="closeBulkImport()">Cancel</button>
+          <button class="primary-button" type="button" [disabled]="bulkImportLoading()" (click)="submitBulkImport($event)">
+            {{ bulkImportLoading() ? 'Importing...' : 'Import models' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <app-confirm-dialog
+    [visible]="confirmOpen()"
+    title="Delete model"
+    message="Are you sure you want to delete this device model? This cannot be undone."
+    (confirm)="deleteModel()"
+    (cancel)="closeModal()"
+  ></app-confirm-dialog>
+</div>

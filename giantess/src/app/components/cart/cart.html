@@ -1,0 +1,138 @@
+<div class="pointer-events-none fixed inset-0 z-[55]" aria-hidden="true">
+  <div
+    [ngClass]="{ 'pointer-events-auto': isOpen(), 'opacity-100': isOpen() }"
+    class="absolute inset-0 bg-[rgba(17,24,39,0.38)] opacity-0 transition duration-300"
+    (click)="close()"
+  ></div>
+</div>
+
+<aside
+  [ngClass]="{ 'translate-x-0': isOpen(), 'translate-x-full': !isOpen() }"
+  class="fixed right-0 top-0 z-[56] h-screen w-[min(560px,92vw)] transition-transform duration-300"
+  aria-label="Cart sidebar"
+  role="dialog"
+  aria-modal="true"
+>
+  <div class="h-full overflow-y-auto rounded-l-[26px] border border-[rgba(30,99,218,0.14)] bg-[linear-gradient(180deg,#ffffff_0%,#f7fbff_100%)] shadow-[0_30px_90px_rgba(15,23,42,0.18)]">
+    <!-- Header -->
+    <div
+      class="sticky top-0 z-10 flex items-center justify-between border-b border-[rgba(30,99,218,0.12)] bg-white/80 px-6 py-5 backdrop-blur"
+    >
+      <div class="flex items-center gap-3">
+        <span
+          class="grid h-11 w-11 place-items-center rounded-2xl bg-[linear-gradient(135deg,#1e63da_0%,#1fb4d9_100%)] text-white shadow-[0_16px_30px_rgba(30,99,218,0.18)]"
+        >
+          <fa-icon [icon]="faCartShopping"></fa-icon>
+        </span>
+        <div>
+          <p class="m-0 text-[1.05rem] font-extrabold leading-tight text-[#142a46]">Your Cart</p>
+          <p class="m-0 text-[0.92rem] font-semibold leading-tight text-[#5b6b7e]">
+            {{ itemCount() }} item{{ itemCount() === 1 ? '' : 's' }}
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="grid h-11 w-11 place-items-center rounded-2xl border border-[rgba(215,223,239,0.9)] bg-white text-[#273041] transition hover:-translate-y-px hover:border-[rgba(30,99,218,0.22)] hover:text-[#1e63da]"
+        aria-label="Close cart"
+        (click)="close()"
+      >
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="px-6 py-6">
+      @if (!items().length) {
+        <div class="rounded-3xl border border-dashed border-[rgba(30,99,218,0.18)] bg-[rgba(30,99,218,0.04)] p-6 text-center">
+          <div class="mx-auto mb-3 grid h-14 w-14 place-items-center rounded-2xl bg-white">
+            <fa-icon [icon]="faCartShopping" class="text-[#1e63da]" ></fa-icon>
+          </div>
+          <p class="m-0 text-[1.03rem] font-extrabold text-[#142a46]">Cart is empty</p>
+          <p class="m-0 mt-2 text-[0.95rem] font-semibold text-[#5b6b7e]">
+            Add products to see them here.
+          </p>
+          <button
+            type="button"
+            class="mt-5 w-full rounded-2xl bg-[linear-gradient(135deg,#1e63da_0%,#1fb4d9_100%)] px-4 py-3 font-extrabold text-white shadow-[0_18px_44px_rgba(30,99,218,0.22)] transition hover:-translate-y-px"
+            (click)="close()"
+          >
+            <fa-icon [icon]="faCheck" class="mr-2"></fa-icon>
+            Continue shopping
+          </button>
+        </div>
+      } @else {
+        <div class="grid gap-4">
+          @for (item of items(); track item.product.id) {
+            <div class="flex items-start gap-4 rounded-3xl border border-[#d7dfef] bg-white p-4 shadow-sm">
+              <div class="grid h-20 w-20 flex-none place-items-center rounded-2xl bg-[rgba(30,99,218,0.06)]">
+                <img
+                  class="max-h-16 w-full object-contain"
+                  [src]="item.product.image_url || 'product-image.webp'"
+                  [alt]="item.product.name"
+                />
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="m-0 line-clamp-2 text-[0.98rem] font-extrabold leading-5 text-[#142a46]">
+                  {{ item.product.name }}
+                </p>
+                <p class="m-0 mt-1 text-[0.9rem] font-semibold text-[#5b6b7e]">
+                  {{ formatProductPrice(item.product) }}
+                </p>
+                <div class="mt-3 inline-flex items-center rounded-full border border-[#d7dfef] bg-[#fbfdff]">
+                  <button
+                    type="button"
+                    class="grid h-9 w-9 place-items-center text-[#1e63da]"
+                    aria-label="Decrease quantity"
+                    (click)="decreaseQty(item.product.id)"
+                  >
+                    <fa-icon [icon]="faMinus"></fa-icon>
+                  </button>
+                  <span class="min-w-8 text-center text-sm font-extrabold text-[#142a46]">{{ item.quantity }}</span>
+                  <button
+                    type="button"
+                    class="grid h-9 w-9 place-items-center text-[#1e63da]"
+                    aria-label="Increase quantity"
+                    (click)="increaseQty(item.product.id)"
+                  >
+                    <fa-icon [icon]="faPlus"></fa-icon>
+                  </button>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="grid h-10 w-10 flex-none place-items-center rounded-xl border border-[#d7dfef] bg-white text-[#273041] transition hover:-translate-y-px hover:text-[#e11d48]"
+                aria-label="Remove"
+                (click)="removeItem(item.product.id)"
+              >
+                <fa-icon [icon]="faTrash"></fa-icon>
+              </button>
+            </div>
+          }
+        </div>
+      }
+
+    </div>
+
+    <!-- Footer / totals -->
+    <div class="sticky bottom-0 border-t border-[rgba(30,99,218,0.12)] bg-white/85 p-6 backdrop-blur">
+      <div class="flex items-center justify-between">
+        <p class="m-0 text-[0.95rem] font-bold text-[#5b6b7e]">Subtotal</p>
+        <p class="m-0 text-[1.2rem] font-extrabold text-[#142a46]">{{ subtotal() }}</p>
+      </div>
+      <button
+        type="button"
+        class="mt-4 w-full rounded-2xl bg-[linear-gradient(135deg,#1e63da_0%,#1fb4d9_100%)] px-4 py-3 font-extrabold text-white shadow-[0_18px_44px_rgba(30,99,218,0.22)] transition hover:-translate-y-px disabled:opacity-60"
+        [disabled]="!items().length"
+      >
+        Checkout
+      </button>
+
+      <p class="m-0 mt-3 text-center text-[0.88rem] font-semibold text-[#7a8aa0]">
+        Secure payments. Easy returns.
+      </p>
+    </div>
+  </div>
+</aside>
+

@@ -1,0 +1,135 @@
+:host {
+  display: block;
+}
+
+.hero-slider {
+  position: relative;
+  isolation: isolate;
+  background: #eef8fb;
+}
+
+.hero-slider__image-wrap {
+  position: relative;
+  width: min(calc(100% - 48px), 2400px);
+  aspect-ratio: 24 / 7;
+  margin: 0 auto;
+  min-height: 300px;
+  max-height: 620px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 900ms ease,
+    visibility 900ms ease;
+}
+
+.hero-slide--active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+
+.hero-slide__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center top;
+  transform: scale(1);
+  transition: transform 6200ms ease;
+}
+
+.hero-slide--active .hero-slide__image {
+  transform: scale(1);
+}
+
+.hero-slide__content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 10px 16px 12px;
+  text-align: center;
+  background: #eef8fb;
+  opacity: 1;
+}
+
+.hero-slide__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  border-radius: 999px;
+  background: #f7b640;
+  box-shadow: 0 18px 38px rgba(247, 182, 64, 0.28);
+  color: #102033;
+  font-size: 0.96rem;
+  font-weight: 800;
+  line-height: 1;
+  padding: 0 26px;
+  text-decoration: none;
+  transition:
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.hero-slide__button:hover,
+.hero-slide__button:focus-visible {
+  box-shadow: 0 22px 44px rgba(247, 182, 64, 0.32);
+  transform: translateY(-2px);
+}
+
+.hero-slide__button:focus-visible {
+  outline: 3px solid rgba(247, 182, 64, 0.58);
+  outline-offset: 4px;
+}
+
+@keyframes slideTextIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideTextOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-slider__image-wrap {
+    width: 100%;
+    min-height: 220px;
+  }
+
+  .hero-slide__image {
+    object-fit: contain;
+    object-position: center top;
+  }
+
+  .hero-slide__content {
+    padding: 8px 14px 10px;
+  }
+}

@@ -1,0 +1,10 @@
+@import '../product-management/product-management.css';
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #12263d;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+}

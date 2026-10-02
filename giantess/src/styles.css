@@ -1,0 +1,298 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand-blue: #08b4dc;
+    --brand-blue-dark: #087da7;
+    --brand-yellow: #f7b640;
+    --brand-yellow-soft: #fff4dc;
+    --brand-ink: #102033;
+    --brand-surface: #f2fbff;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f2fbff;
+  }
+
+  html.admin-route app-header,
+  html.admin-route app-footer {
+    display: none !important;
+  }
+}
+
+@layer components {
+  body .management-page .management-table,
+  body .product-page .management-table {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  }
+
+  body .management-page .management-table thead,
+  body .product-page .management-table thead {
+    background: #f8fafc;
+    border-bottom: 0;
+  }
+
+  body .management-page .management-table th,
+  body .management-page .management-table td,
+  body .product-page .management-table th,
+  body .product-page .management-table td {
+    height: 56px;
+    padding: 0.55rem 0.75rem;
+    box-sizing: border-box;
+    border-bottom: 1px solid #edf2f7;
+    color: #334155;
+    font-size: 0.86rem;
+    line-height: 1.25;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body .management-page .management-table th,
+  body .product-page .management-table th {
+    height: 42px;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  body .management-page .management-table tbody tr,
+  body .product-page .management-table tbody tr {
+    background: #ffffff;
+    transition: background-color 140ms ease;
+  }
+
+  body .management-page .management-table tbody tr:hover,
+  body .product-page .management-table tbody tr:hover {
+    background: #f8fafc;
+  }
+
+  body .management-page .management-table th:last-child,
+  body .management-page .management-table td:last-child,
+  body .product-page .management-table th:last-child,
+  body .product-page .management-table td:last-child {
+    width: 112px;
+    text-align: right;
+  }
+
+  body .management-page .management-table td:last-child,
+  body .product-page .management-table td:last-child {
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  body .management-page .management-table tbody tr:last-child td,
+  body .product-page .management-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  body .management-page .table-image,
+  body .product-page .product-image {
+    display: block;
+    width: 46px;
+    height: 34px;
+    object-fit: contain;
+    background: #f8fafc;
+    border: 1px solid #edf2f7;
+    border-radius: 6px;
+  }
+
+  body .management-page .table-actions,
+  body .product-page .table-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.25rem;
+  }
+
+  body .management-page .action-btn,
+  body .product-page .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 0.78rem;
+    transition:
+      background-color 140ms ease,
+      border-color 140ms ease,
+      color 140ms ease;
+  }
+
+  body .management-page .action-btn.edit:hover,
+  body .product-page .action-btn.edit:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #2563eb;
+  }
+
+  body .management-page .action-btn.delete:hover,
+  body .product-page .action-btn.delete:hover {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+  }
+
+  body .management-page .action-btn:focus-visible,
+  body .product-page .action-btn:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 2px;
+  }
+
+  body .management-page .modal-backdrop {
+    align-items: flex-start;
+    padding: 1.25rem;
+    overflow-y: auto;
+  }
+
+  body .management-page .modal-panel {
+    width: min(760px, 100%);
+    max-height: calc(100vh - 2.5rem);
+    overflow-y: auto;
+    border: 1px solid #dbe5f4;
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.24);
+  }
+
+  body .management-page .modal-panel h3 {
+    margin-bottom: 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 1.35rem;
+  }
+
+  body .management-page .modal-form {
+    display: grid;
+    gap: 0.85rem;
+  }
+
+  body .management-page .modal-form .form-field {
+    display: block;
+    margin-bottom: 0;
+    color: #0f172a;
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  body .management-page .field-label {
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  body .management-page .field-control {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-height: 46px;
+    padding: 0 0.9rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #2563eb;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  body .management-page .field-control:focus-within {
+    border-color: #2563eb;
+    background: #f8fbff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+
+  body .management-page .field-control fa-icon {
+    flex: 0 0 auto;
+    width: 1rem;
+    color: #1e63da;
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  body .management-page .modal-form input,
+  body .management-page .modal-form textarea,
+  body .management-page .modal-form select {
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    margin-top: 0;
+    background: transparent;
+    color: #172033;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+  }
+
+  body .management-page .modal-form input::placeholder,
+  body .management-page .modal-form textarea::placeholder {
+    color: #94a3b8;
+  }
+
+  body .management-page .field-control--textarea {
+    align-items: flex-start;
+  }
+
+  body .management-page .field-control--textarea fa-icon {
+    margin-top: 0.8rem;
+  }
+
+  body .management-page .modal-form textarea {
+    min-height: 82px;
+    padding-top: 0.75rem;
+    resize: vertical;
+  }
+
+  body .management-page .field-control--file {
+    padding: 0.55rem 0.9rem;
+  }
+
+  body .management-page .modal-actions {
+    margin-top: 0.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  @media (max-width: 640px) {
+    body .management-page .modal-backdrop {
+      padding: 0.75rem;
+    }
+
+    body .management-page .modal-panel {
+      max-height: calc(100vh - 1.5rem);
+      padding: 1rem;
+    }
+
+    body .management-page .modal-actions {
+      flex-direction: column-reverse;
+    }
+  }
+}

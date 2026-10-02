@@ -1,0 +1,271 @@
+.dashboard-home {
+  padding: 30px 40px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+/* Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.dashboard-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #12263d;
+  margin: 0;
+}
+
+/* Section Title */
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #12263d;
+  margin: 0 0 20px 0;
+}
+
+/* Feature Cards Section */
+.feature-cards-section {
+  margin-bottom: 35px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  border-radius: 16px;
+  padding: 30px;
+  color: white;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 0;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.card-icon {
+  font-size: 32px;
+  opacity: 0.9;
+}
+
+.card-badge {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.card-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.card-description {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0 0 20px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.card-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px solid white;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+.card-button:hover {
+  background: white;
+  color: #12263d;
+}
+
+/* Activities Section */
+.activities-section {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.activity-item:hover {
+  background-color: #f9fafb;
+  border-color: #1fb4d9;
+}
+
+.activity-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.activity-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #12263d;
+  margin: 0 0 5px 0;
+}
+
+.activity-description {
+  font-size: 13px;
+  color: #5f6f86;
+  margin: 0;
+}
+
+.activity-status {
+  min-width: 100px;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.pending {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.status-badge.in-progress {
+  background: rgba(31, 180, 217, 0.2);
+  color: #1fb4d9;
+}
+
+.status-badge.completed {
+  background: rgba(74, 222, 128, 0.2);
+  color: #4ade80;
+}
+
+.activity-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  padding: 6px 14px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e63da;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  border-color: #1e63da;
+  background: rgba(30, 99, 218, 0.05);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .dashboard-home {
+    padding: 20px 25px;
+  }
+
+  .dashboard-header {
+    margin-bottom: 25px;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .dashboard-home {
+    padding: 15px;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .activity-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    flex: 1;
+    min-width: 70px;
+  }
+}

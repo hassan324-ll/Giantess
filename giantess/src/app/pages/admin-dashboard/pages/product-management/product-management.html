@@ -1,0 +1,393 @@
+<div class="product-page">
+  <header class="page-header">
+    <div>
+      <h1>Product Management</h1>
+      <p>Manage products and model associations. An SKU can only appear once per model.</p>
+    </div>
+    <div class="header-actions">
+      <button class="secondary-button" type="button" (click)="showBulkImport()">Bulk import</button>
+      <button class="secondary-button" type="button" (click)="toggleSelectionMode()" [disabled]="!products().length">
+        {{ selectionMode() ? 'Cancel select' : 'Select' }}
+      </button>
+      <button class="primary-button" type="button" (click)="openCreate()">+ Add product</button>
+    </div>
+  </header>
+
+  <section class="filter-panel">
+    <div class="filter-grid">
+      <label class="filter-label">
+        <span>Brand</span>
+        <span class="filter-control">
+          <fa-icon [icon]="faBox"></fa-icon>
+          <select [value]="selectedBrandSlug() || ''" (change)="onBrandFilterChange($event)">
+            <option value="" disabled>Select a brand</option>
+            <option *ngFor="let brand of brands()" [value]="brand.slug">{{ brand.name }}</option>
+          </select>
+        </span>
+      </label>
+
+      <label class="filter-label">
+        <span>Category</span>
+        <span class="filter-control">
+          <fa-icon [icon]="faTag"></fa-icon>
+          <select
+            [value]="selectedCategorySlug() || ''"
+            (change)="onCategoryFilterChange($event)"
+            [disabled]="!categories().length"
+          >
+            <option value="" disabled>Select a category</option>
+            <option *ngFor="let category of categories()" [value]="category.slug">{{ category.name }}</option>
+          </select>
+        </span>
+      </label>
+
+      <label class="filter-label">
+        <span>Model</span>
+        <span class="filter-control">
+          <fa-icon [icon]="faMicrochip"></fa-icon>
+          <select
+            [value]="selectedDeviceModelId() || ''"
+            (change)="onModelFilterChange($event)"
+            [disabled]="!deviceModels().length"
+          >
+            <option value="" disabled>Select a device model</option>
+            <option *ngFor="let model of deviceModels()" [value]="model.id">{{ model.name }}</option>
+          </select>
+        </span>
+      </label>
+
+      <label class="filter-label filter-label--search">
+        <span>Search</span>
+        <span class="filter-control">
+          <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+          <input
+            type="text"
+            placeholder="Name or SKU"
+            [value]="searchTerm()"
+            (input)="searchTerm.set($any($event.target).value)"
+          />
+        </span>
+      </label>
+    </div>
+
+    <div class="filter-actions">
+      <button class="secondary-button" type="button" (click)="searchProducts()">Search</button>
+    </div>
+  </section>
+
+  <div class="feedback-row" *ngIf="errorMessage() || successMessage()">
+    <span class="error" *ngIf="errorMessage()">{{ errorMessage() }}</span>
+    <span class="success" *ngIf="successMessage()">{{ successMessage() }}</span>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading-state">
+    <app-loading-spinner label="Loading products"></app-loading-spinner>
+  </div>
+
+  <div class="bulk-actions-bar" *ngIf="selectionMode() && !isLoading() && products().length">
+    <span>{{ selectedProductIds().size }} selected</span>
+    <button
+      class="danger-button"
+      type="button"
+      [disabled]="!selectedProductIds().size || bulkDeleteLoading()"
+      (click)="confirmBulkDelete()"
+    >
+      <fa-icon [icon]="faTrash"></fa-icon>
+      {{ bulkDeleteLoading() ? 'Deleting...' : 'Delete selected' }}
+    </button>
+  </div>
+
+  <table class="management-table" *ngIf="!isLoading() && products().length">
+    <thead>
+      <tr>
+        <th class="select-column" *ngIf="selectionMode()">
+          <input
+            type="checkbox"
+            [checked]="areAllVisibleProductsSelected()"
+            (change)="toggleAllVisibleProducts($event)"
+            aria-label="Select all visible products"
+          />
+        </th>
+        <th>#</th>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Model</th>
+        <th>Price</th>
+        <th>SKU</th>
+        <th>Stock</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products(); let productIndex = index">
+        <td class="select-column" *ngIf="selectionMode()">
+          <input
+            type="checkbox"
+            [checked]="isProductSelected(product.id)"
+            (change)="toggleProductSelection(product.id, $event)"
+            aria-label="Select {{ product.name }}"
+          />
+        </td>
+        <td>{{ productIndex + 1 }}</td>
+        <td>
+          <img *ngIf="getProductPrimaryImage(product)" [src]="getProductPrimaryImage(product)" alt="{{ product.name }}" class="product-image" />
+          <span *ngIf="!getProductPrimaryImage(product)">No image</span>
+        </td>
+        <td>{{ product.name }}</td>
+        <td>{{ getProductModelName(product) }}</td>
+        <td>{{ formatProductPrice(product.price) }}</td>
+        <td>{{ product.part_number }}</td>
+        <td>
+          <span [class]="getStockStatusClass(product.stock_count)">
+            {{ getStockStatusLabel(product.stock_count) }}
+          </span>
+        </td>
+        <td>
+          <div class="table-actions">
+            <button
+              class="action-btn edit"
+              type="button"
+              (click)="openEdit(product)"
+              title="Edit {{ product.name }}"
+              aria-label="Edit {{ product.name }}"
+            >
+              <fa-icon [icon]="faPencilAlt"></fa-icon>
+            </button>
+            <button
+              class="action-btn delete"
+              type="button"
+              (click)="confirmDelete(product)"
+              title="Delete {{ product.name }}"
+              aria-label="Delete {{ product.name }}"
+            >
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!isLoading() && !products().length" class="empty-state">
+    No products found. Create a product to see it listed here.
+  </div>
+
+  <ng-container *ngIf="pagination() as pageData">
+    <nav class="pagination" *ngIf="pageData.last_page > 1">
+      <button class="secondary-button" type="button" [disabled]="pageData.current_page === 1" (click)="changePage(pageData.current_page - 1)">
+        Previous
+      </button>
+      <span>Page {{ pageData.current_page }} of {{ pageData.last_page }}</span>
+      <button class="secondary-button" type="button" [disabled]="pageData.current_page === pageData.last_page" (click)="changePage(pageData.current_page + 1)">
+        Next
+      </button>
+    </nav>
+  </ng-container>
+
+  <section class="modal-backdrop" *ngIf="modalOpen()">
+    <div class="modal-panel">
+      <h3>{{ activeProductId ? 'Update product' : 'Create product' }}</h3>
+      <form [formGroup]="productForm" (ngSubmit)="submitProduct()" class="modal-form">
+        <label class="form-field">
+          <span class="field-label">Name</span>
+          <span class="field-control">
+            <fa-icon [icon]="faBox"></fa-icon>
+            <input formControlName="name" placeholder="Enter product name" />
+          </span>
+          <span class="field-error" *ngIf="productForm.controls['name'].invalid && productForm.controls['name'].touched">
+            Product name is required.
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Slug</span>
+          <span class="field-control">
+            <fa-icon [icon]="faLink"></fa-icon>
+            <input formControlName="slug" placeholder="product-slug" />
+          </span>
+          <span class="field-error" *ngIf="productForm.controls['slug'].invalid && productForm.controls['slug'].touched">
+            Slug is required and must be lowercase with hyphens.
+          </span>
+        </label>
+
+        <label class="form-field form-field--wide">
+          <span class="field-label">Description</span>
+          <span class="field-control field-control--textarea">
+            <fa-icon [icon]="faAlignLeft"></fa-icon>
+            <textarea formControlName="description" rows="3" placeholder="Enter product description"></textarea>
+          </span>
+          <span class="field-error" *ngIf="productForm.controls['description'].invalid && productForm.controls['description'].touched">
+            Description is required.
+          </span>
+        </label>
+
+        <div class="field-row">
+          <label class="form-field">
+            <span class="field-label">Price</span>
+            <span class="field-control">
+              <fa-icon [icon]="faDollarSign"></fa-icon>
+              <input type="number" formControlName="price" min="0" />
+            </span>
+            <span class="field-error" *ngIf="productForm.controls['price'].invalid && productForm.controls['price'].touched">
+              Enter a valid price.
+            </span>
+          </label>
+
+          <label class="form-field">
+            <span class="field-label">SKU</span>
+            <span class="field-control">
+              <fa-icon [icon]="faHashtag"></fa-icon>
+              <input formControlName="part_number" placeholder="SKU or part number" />
+            </span>
+            <span class="field-error" *ngIf="productForm.controls['part_number'].invalid && productForm.controls['part_number'].touched">
+              SKU is required.
+            </span>
+          </label>
+        </div>
+
+        <label class="form-field">
+          <span class="field-label">Stock</span>
+          <span class="field-control">
+            <fa-icon [icon]="faBoxesStacked"></fa-icon>
+            <select formControlName="stock_count">
+              <option value="10">In stock</option>
+              <option value="0">Not in stock</option>
+            </select>
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Device model</span>
+          <span class="field-control">
+            <fa-icon [icon]="faMicrochip"></fa-icon>
+            <select formControlName="device_model_id">
+              <option value="" disabled>Select a device model</option>
+              <option *ngFor="let model of deviceModels()" [value]="model.id">{{ model.name }}</option>
+            </select>
+          </span>
+          <span class="field-error" *ngIf="productForm.controls['device_model_id'].invalid && productForm.controls['device_model_id'].touched">
+            Select a device model.
+          </span>
+          <span class="field-hint">
+            The same SKU can be used on another model, but not twice on this model.
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Product images</span>
+          <span class="field-control field-control--file">
+            <fa-icon [icon]="faImage"></fa-icon>
+            <input type="file" (change)="onImagesSelected($event)" accept="image/*" multiple />
+          </span>
+        </label>
+
+        <div class="image-preview-grid" *ngIf="imagePreviews().length">
+          <div class="image-preview" *ngFor="let preview of imagePreviews(); let imageIndex = index">
+            <img [src]="preview" alt="Selected preview {{ imageIndex + 1 }}" />
+            <button
+              type="button"
+              class="image-remove-btn"
+              (click)="removeImage(imageIndex)"
+              title="Remove this image"
+              aria-label="Remove image {{ imageIndex + 1 }}"
+            >
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="image-actions" *ngIf="imagePreviews().length">
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="clearAllImages()"
+            title="Clear all selected images"
+          >
+            Clear all images
+          </button>
+        </div>
+
+        <div class="modal-actions">
+          <button class="secondary-button" type="button" (click)="closeModal()">Cancel</button>
+          <button class="primary-button" type="submit" [disabled]="formLoading()">
+            {{ formLoading() ? 'Saving...' : activeProductId ? 'Update product' : 'Create product' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <app-confirm-dialog
+    [visible]="confirmOpen()"
+    [title]="deleteConfirmTitle"
+    [message]="deleteConfirmMessage"
+    (confirm)="deleteProduct()"
+    (cancel)="closeModal()"
+  ></app-confirm-dialog>
+
+  <section class="modal-backdrop" *ngIf="bulkImportOpen()">
+    <div class="modal-panel">
+      <h3>Bulk import products</h3>
+      <form class="modal-form" novalidate (submit)="submitBulkImport($event)">
+        <p class="modal-description">
+          Upload one ZIP package with a CSV/Excel product file and all product images. The importer will fill missing titles from the product code when possible.
+        </p>
+
+        <p class="modal-description">
+          Existing part numbers or SKUs are updated on the same model, and the rest of the package continues importing.
+        </p>
+
+        <label class="form-field">
+          <span class="field-label">Product package</span>
+          <span class="field-control field-control--file">
+            <fa-icon [icon]="faBoxesStacked"></fa-icon>
+            <input type="file" (change)="onBulkPackageSelected($event)" accept=".zip" aria-label="Bulk import ZIP package" />
+          </span>
+          <span class="field-hint">
+            Recommended: upload one .zip containing one CSV/Excel file and all product images. Images are matched by image filename, SKU, or part number.
+          </span>
+        </label>
+
+        <div class="bulk-import-fallback">
+          <p class="modal-description">Backup method: upload the spreadsheet and image files separately.</p>
+
+        <label class="form-field">
+          <span class="field-label">CSV/Excel file</span>
+          <span class="field-control field-control--file">
+            <fa-icon [icon]="faBoxesStacked"></fa-icon>
+            <input type="file" (change)="onBulkCsvSelected($event)" accept=".csv,.xlsx,.xls" aria-label="Bulk import CSV or Excel file" />
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Product images (optional)</span>
+          <span class="field-control field-control--file">
+            <fa-icon [icon]="faImage"></fa-icon>
+            <input type="file" (change)="onBulkImagesSelected($event)" accept="image/*" multiple aria-label="Bulk import image files" />
+          </span>
+        </label>
+        </div>
+
+        <div class="import-summary" *ngIf="bulkImportSummary()">
+          {{ bulkImportSummary() }}
+        </div>
+
+        <div class="feedback-row" *ngIf="bulkImportError() || bulkImportSuccess()">
+          <span class="error" *ngIf="bulkImportError()">{{ bulkImportError() }}</span>
+          <span class="success" *ngIf="bulkImportSuccess()">{{ bulkImportSuccess() }}</span>
+        </div>
+
+        <div class="import-progress" *ngIf="bulkImportProgress()">
+          {{ bulkImportProgress() }}
+        </div>
+
+        <div class="modal-actions">
+          <button class="secondary-button" type="button" (click)="closeBulkImport()">Cancel</button>
+          <button class="primary-button" type="button" [disabled]="bulkImportLoading()" (click)="submitBulkImport($event)">
+            {{ bulkImportLoading() ? 'Importing...' : 'Import products' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>

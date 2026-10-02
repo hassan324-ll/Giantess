@@ -1,0 +1,13 @@
+<section class="hero-slider" aria-label="Featured Giantess products">
+  <div class="hero-slider__image-wrap">
+    @for (slide of slides; track slide.imagePath; let index = $index) {
+      <article class="hero-slide" [class.hero-slide--active]="activeIndex() === index">
+        <img class="hero-slide__image" [src]="slide.imagePath" [alt]="slide.alt" />
+      </article>
+    }
+  </div>
+
+  <div class="hero-slide__content">
+    <a class="hero-slide__button" [href]="activeSlide().ctaHref">{{ activeSlide().ctaLabel }}</a>
+  </div>
+</section>

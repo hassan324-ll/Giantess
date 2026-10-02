@@ -1,0 +1,13 @@
+**/node_modules/
+**/vendor/
+**/.angular/
+**/dist/
+**/.agents/
+**/.env
+**/.env.*
+!**/.env.example
+*.log
+**/.phpunit.result.cache
+**/.phpunit.cache/
+**/auth.json
+**/storage/*.key

@@ -1,0 +1,45 @@
+<section class="py-16 px-4 bg-[#f2fbff]">
+  <div class="mx-auto max-w-6xl">
+    <!-- Section Header -->
+    <div class="mb-14 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-[#102033] mb-3">
+        Trusted by Industry Leaders
+      </h2>
+      <p class="text-lg text-[#556b7f] max-w-2xl mx-auto">
+        We partner with the world's most innovative brands
+      </p>
+    </div>
+
+    <!-- Brands Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      @for (brand of brands; track brand.name) {
+        <div class="group relative">
+          <!-- Brand Card -->
+          <div
+            class="flex flex-col items-center justify-center p-8 rounded-2xl border border-[#d7dfef] bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:border-[#08b4dc] h-full"
+          >
+            <!-- Font Awesome Icon -->
+            <div class="text-5xl mb-4 text-[#087da7] transition-transform duration-300 group-hover:scale-110">
+              <fa-icon [icon]="brand.icon"></fa-icon>
+            </div>
+
+            <!-- Brand Name -->
+            <p class="text-center font-semibold text-[#102033] text-sm transition-colors duration-300 group-hover:text-[#087da7]">
+              {{ brand.name }}
+            </p>
+
+            <!-- Hover Accent -->
+            <div
+              class="absolute inset-0 rounded-2xl bg-[#f7b640] opacity-0 transition-opacity duration-300 group-hover:opacity-10 pointer-events-none"
+            ></div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Bottom Accent Line -->
+    <div class="mt-16 flex justify-center">
+      <div class="h-1 w-24 rounded-full bg-[#f7b640]"></div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,115 @@
+<section class="min-h-screen bg-[#f6f6f6] px-4 py-12 text-[#111827] sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-6xl">
+    <nav class="mb-8 flex flex-wrap items-center gap-3 text-sm font-semibold">
+      <a
+        routerLink="/home"
+        class="rounded-full bg-white px-4 py-2 text-[#1e63da] shadow-sm transition hover:-translate-y-0.5 hover:text-[#00aeef]"
+      >
+        Home
+      </a>
+      <span class="text-slate-400">/</span>
+      <a
+        [routerLink]="['/brands', brandSlug(), 'categories']"
+        class="rounded-full bg-white px-4 py-2 text-[#1e63da] shadow-sm transition hover:-translate-y-0.5 hover:text-[#00aeef]"
+      >
+        {{ getBrandName() }}
+      </a>
+      <span class="text-slate-400">/</span>
+      <span class="rounded-full bg-[#e8f7ff] px-4 py-2 text-[#008fd0]">
+        {{ getCategoryName() }}
+      </span>
+    </nav>
+
+    <div class="overflow-hidden rounded-[18px] bg-white shadow-[0_22px_60px_rgba(15,23,42,0.08)]">
+      <div class="grid gap-0 md:grid-cols-[0.88fr_1.12fr]">
+        <div class="flex min-h-72 items-center justify-center bg-[#eef4ff] p-8">
+          <img
+            class="max-h-56 w-full object-contain"
+            [src]="brand()?.image_url || fallbackModelImage"
+            [alt]="getBrandName()"
+            loading="eager"
+            decoding="async"
+            (error)="useFallbackImage($event)"
+          />
+        </div>
+
+        <div class="p-7 sm:p-9">
+          <p class="mb-3 text-sm font-bold uppercase tracking-[0.18em] text-[#00aeef]">
+            Device Models
+          </p>
+          <h1 class="text-3xl font-black leading-tight text-[#172033] sm:text-4xl">
+            {{ getCategoryName() }}
+          </h1>
+          <p class="mt-4 max-w-2xl text-sm font-semibold leading-7 text-slate-600 sm:text-base">
+            Explore the available {{ getCategoryName() }} models for {{ getBrandName() }}. Choose a model to review details, compatible parts, and product availability.
+          </p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <span class="rounded-full bg-[#e8f7ff] px-5 py-2 text-sm font-extrabold text-[#1e63da]">
+              {{ models().length }} models
+            </span>
+            <span class="rounded-full bg-[#f0f9ff] px-5 py-2 text-sm font-extrabold text-[#008fd0]">
+              {{ getBrandName() }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10">
+      @if (isLoading()) {
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track item) {
+            <div class="min-h-64 animate-pulse rounded-[14px] bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.07)]">
+              <div class="h-36 rounded-[10px] bg-slate-100"></div>
+              <div class="mx-auto mt-8 h-4 w-32 rounded-full bg-slate-100"></div>
+              <div class="mx-auto mt-5 h-9 w-28 rounded-full bg-slate-100"></div>
+            </div>
+          }
+        </div>
+      } @else if (errorMessage()) {
+        <div class="rounded-[14px] border border-red-100 bg-white p-7 text-sm font-semibold text-red-600 shadow-sm">
+          {{ errorMessage() }}
+        </div>
+      } @else if (!models().length) {
+        <div class="rounded-[14px] bg-white p-10 text-center shadow-[0_18px_45px_rgba(15,23,42,0.07)]">
+          <h2 class="text-2xl font-black text-[#172033]">No models found</h2>
+          <p class="mx-auto mt-3 max-w-lg text-sm font-semibold leading-6 text-slate-600">
+            This category does not have published models yet.
+          </p>
+        </div>
+      } @else {
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          @for (model of models(); track model.id) {
+            <a
+              [routerLink]="['/brands', brandSlug(), 'categories', categorySlug(), 'models', model.slug, 'products']"
+              class="group flex min-h-72 flex-col overflow-hidden rounded-[14px] border border-slate-100 bg-white text-inherit no-underline shadow-[0_18px_45px_rgba(15,23,42,0.07)] transition duration-300 hover:-translate-y-1 hover:border-[#00aeef]/30 hover:shadow-[0_24px_58px_rgba(0,174,239,0.16)]"
+              [attr.aria-label]="'View products for ' + model.name"
+            >
+              <div class="flex h-40 items-center justify-center bg-[#f8fbff] p-5">
+                <img
+                  class="max-h-32 w-full object-contain transition duration-300 group-hover:scale-105"
+                  [src]="getModelImage(model)"
+                  [alt]="model.name"
+                  loading="lazy"
+                  decoding="async"
+                  (error)="useFallbackImage($event)"
+                />
+              </div>
+
+              <div class="flex flex-1 flex-col items-center px-5 pb-5 pt-6 text-center">
+                <h2 class="line-clamp-2 min-h-12 text-base font-bold leading-6 text-[#172033]">
+                  {{ model.name }}
+                </h2>
+                <span
+                  class="mt-auto inline-flex min-h-10 items-center justify-center rounded-full bg-[#00aeef] px-5 text-sm font-bold text-white shadow-[0_12px_24px_rgba(0,174,239,0.25)] transition hover:bg-[#008fd0] focus:outline-none focus:ring-2 focus:ring-[#00aeef] focus:ring-offset-2"
+                >
+                  View Products
+                </span>
+              </div>
+            </a>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,43 @@
+<div class="dashboard-home">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+  </div>
+
+  <!-- Feature Cards -->
+  <div class="feature-cards-section">
+    <h2 class="section-title">Promotions & Features</h2>
+    <div class="cards-grid">
+      <div *ngFor="let card of cards" class="feature-card" [style.background]="card.color">
+        <div class="card-header">
+          <fa-icon [icon]="card.icon" class="card-icon"></fa-icon>
+          <span class="card-badge">{{ card.badge }}</span>
+        </div>
+        <h3 class="card-title">{{ card.title }}</h3>
+        <p class="card-description">{{ card.description }}</p>
+        <a class="card-button" [routerLink]="card.route">{{ card.action }}</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trending Activities -->
+  <!-- <div class="activities-section">
+    <h2 class="section-title">Trending Activities</h2>
+    <div class="activities-list">
+      <div *ngFor="let activity of trendingActivities" class="activity-item">
+        <div class="activity-info">
+          <h4 class="activity-name">{{ activity.name }}</h4>
+          <p class="activity-description">{{ activity.description }}</p>
+        </div>
+        <div class="activity-status">
+          <span class="status-badge" [ngClass]="activity.status.toLowerCase().replace(' ', '-')">
+            {{ activity.status }}
+          </span>
+        </div>
+        <div class="activity-actions">
+          <button *ngFor="let action of activity.actions" class="action-btn">{{ action }}</button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</div>

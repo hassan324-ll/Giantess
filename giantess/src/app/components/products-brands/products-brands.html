@@ -1,0 +1,83 @@
+<section id="product-brands" class="relative overflow-hidden bg-[#f6f6f6] px-4 py-16">
+  <div class="mx-auto max-w-6xl">
+    <div class="mb-9">
+      <p class="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#00aeef]">
+        Products Brands
+      </p>
+      <h2 class="text-3xl font-bold text-[#111827] md:text-4xl">
+        Shop by leading device brands
+      </h2>
+    </div>
+
+    <div class="relative">
+      <button
+        type="button"
+        class="absolute -left-6 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#00aeef]/30 bg-white text-3xl leading-none text-[#00aeef] shadow-lg transition hover:bg-[#00aeef] hover:text-white lg:flex"
+        aria-label="Previous product brand"
+        (click)="slideBrands('previous')"
+      >
+        &#8249;
+      </button>
+
+      <div class="overflow-hidden pb-8">
+        <div
+          #brandSlider
+          class="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-10 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          @if (isLoading()) {
+            @for (item of [1, 2, 3]; track item) {
+              <div
+                class="min-h-[340px] min-w-[86%] animate-pulse rounded-[14px] bg-white shadow-[0_18px_45px_rgba(15,23,42,0.08)] sm:min-w-[calc((100%-24px)/2)] lg:min-w-[calc((100%-48px)/3)]"
+              >
+                <div class="mx-auto mt-16 h-28 w-52 rounded-2xl bg-slate-100"></div>
+                <div class="mx-auto mt-12 h-5 w-40 rounded-full bg-slate-100"></div>
+                <div class="mx-auto mt-16 h-11 w-36 rounded-full bg-slate-100"></div>
+              </div>
+            }
+          } @else if (errorMessage()) {
+            <div class="w-full rounded-[14px] border border-red-100 bg-white px-6 py-8 text-sm font-semibold text-red-600 shadow-sm">
+              {{ errorMessage() }}
+            </div>
+          } @else {
+          @for (brand of brands(); track brand.id) {
+            <a
+              data-brand-card
+              [routerLink]="['/brands', brand.slug, 'categories']"
+              class="group flex min-h-[340px] min-w-[86%] snap-start flex-col items-center justify-between rounded-[14px] bg-white px-8 pb-0 pt-10 no-underline shadow-[0_18px_45px_rgba(15,23,42,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(0,174,239,0.18)] sm:min-w-[calc((100%-24px)/2)] lg:min-w-[calc((100%-48px)/3)]"
+              [attr.aria-label]="'View categories for ' + brand.name"
+            >
+              <div class="flex h-40 w-full items-center justify-center">
+                <img
+                  class="max-h-36 w-full object-contain transition duration-300 group-hover:scale-105"
+                  [src]="getBrandImage(brand)"
+                  [alt]="brand.name"
+                  loading="lazy"
+                />
+              </div>
+
+              <h3 class="mt-8 text-center text-lg font-medium text-[#111827]">
+                {{ brand.name }}
+              </h3>
+
+              <span
+                class="mt-9 inline-flex min-w-36 translate-y-1/2 items-center justify-center rounded-full bg-[#00aeef] px-6 py-2.5 text-base font-semibold text-white shadow-[0_12px_28px_rgba(0,174,239,0.28)] transition hover:bg-[#008fd0]"
+              >
+                View Details
+              </span>
+            </a>
+          }
+          }
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="absolute -right-6 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-[#00aeef]/30 bg-white text-3xl leading-none text-[#00aeef] shadow-lg transition hover:bg-[#00aeef] hover:text-white lg:flex"
+        aria-label="Next product brand"
+        (click)="slideBrands('next')"
+      >
+        &#8250;
+      </button>
+    </div>
+  </div>
+</section>

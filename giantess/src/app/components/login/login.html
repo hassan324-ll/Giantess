@@ -1,0 +1,228 @@
+<section class="relative overflow-hidden bg-[linear-gradient(180deg,#f7fbff_0%,#edf5ff_100%)]">
+  <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+    <img [src]="logoPath" alt="" class="w-[420px] max-w-[82vw] opacity-[0.05] blur-[1px]" />
+  </div>
+
+  <div class="relative mx-auto flex min-h-[calc(100vh-140px)] w-[min(1120px,calc(100%-32px))] items-center justify-center py-12 max-[760px]:w-[min(1120px,calc(100%-20px))] max-[760px]:py-8">
+    <div class="w-full max-w-[560px]">
+      <div class="rounded-[32px] border border-white/70 bg-white/90 p-6 shadow-[0_24px_70px_rgba(20,71,167,0.14)] backdrop-blur-xl sm:p-8 lg:p-10">
+        <div class="mb-8 flex items-center justify-between gap-4">
+          <div>
+            <p class="mb-2 text-sm font-bold uppercase tracking-[0.18em] text-[#1e63da]">
+              Account Access
+            </p>
+            <h2 class="m-0 text-3xl font-black text-[#1b2435]">
+              {{ isCreateMode() ? 'Create User' : 'Login' }}
+            </h2>
+          </div>
+
+          <span class="rounded-full bg-[#edf5ff] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-[#1e63da]">
+            {{ isCreateMode() ? 'New User' : 'Member Login' }}
+          </span>
+        </div>
+
+        @if (formError()) {
+          <div class="mb-5 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">
+            {{ formError() }}
+          </div>
+        }
+
+        @if (formMessage()) {
+          <div class="mb-5 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+            {{ formMessage() }}
+          </div>
+        }
+
+        @if (!isCreateMode()) {
+          <form class="grid gap-5" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+            <label class="grid gap-2">
+              <span class="text-sm font-semibold text-[#314056]">Email</span>
+              <span class="flex items-center gap-3 rounded-2xl border border-[#d7dfef] bg-white px-4 py-4 shadow-sm">
+                <fa-icon [icon]="faEnvelope" class="text-[#1e63da]"></fa-icon>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  formControlName="email"
+                  class="w-full border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+                />
+              </span>
+              @if (loginForm.controls.email.invalid && loginForm.controls.email.touched) {
+                <span class="text-xs font-semibold text-red-600">Please enter a valid email.</span>
+              }
+            </label>
+
+            <label class="grid gap-2">
+              <span class="text-sm font-semibold text-[#314056]">Password</span>
+              <span class="flex items-center gap-3 rounded-2xl border border-[#d7dfef] bg-white px-4 py-4 shadow-sm">
+                <fa-icon [icon]="faLock" class="text-[#1e63da]"></fa-icon>
+                <input
+                  type="password"
+                  placeholder="Enter your password"
+                  formControlName="password"
+                  class="w-full border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+                />
+              </span>
+              @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
+                <span class="text-xs font-semibold text-red-600">Password is required.</span>
+              }
+            </label>
+
+            <button
+              type="submit"
+              class="mt-2 rounded-2xl bg-[linear-gradient(135deg,#1e63da_0%,#1fb4d9_100%)] px-6 py-4 text-sm font-bold text-white shadow-[0_18px_32px_rgba(30,99,218,0.25)] transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
+              [disabled]="isLoading()"
+            >
+              {{ isLoading() ? 'Logging in...' : 'Login' }}
+            </button>
+
+            <button
+              type="button"
+              class="justify-self-start text-sm font-semibold text-[#1e63da] underline decoration-transparent transition hover:decoration-current"
+              (click)="setCreateMode(true)"
+            >
+              Create user
+            </button>
+          </form>
+        } @else {
+          <form class="grid gap-5" [formGroup]="createForm" (ngSubmit)="onCreateAccount()">
+            <label class="grid gap-2">
+              <span class="text-sm font-semibold text-[#314056]">Name</span>
+              <span class="flex items-center gap-3 rounded-2xl border border-[#d7dfef] bg-white px-4 py-4 shadow-sm">
+                <fa-icon [icon]="faUser" class="text-[#1e63da]"></fa-icon>
+                <input
+                  type="text"
+                  placeholder="Enter your full name"
+                  formControlName="name"
+                  class="w-full border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+                />
+              </span>
+              @if (createForm.controls.name.invalid && createForm.controls.name.touched) {
+                <span class="text-xs font-semibold text-red-600">Name must be at least 2 characters.</span>
+              }
+            </label>
+
+            <label class="grid gap-2">
+              <span class="text-sm font-semibold text-[#314056]">Email</span>
+              <span class="flex items-center gap-3 rounded-2xl border border-[#d7dfef] bg-white px-4 py-4 shadow-sm">
+                <fa-icon [icon]="faEnvelope" class="text-[#1e63da]"></fa-icon>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  formControlName="email"
+                  class="w-full border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+                />
+              </span>
+              @if (createForm.controls.email.invalid && createForm.controls.email.touched) {
+                <span class="text-xs font-semibold text-red-600">Please enter a valid email.</span>
+              }
+            </label>
+
+            <label class="grid gap-2">
+              <span class="text-sm font-semibold text-[#314056]">Verification</span>
+              <span class="flex items-center gap-3 rounded-2xl border border-[#d7dfef] bg-white px-4 py-3 shadow-sm">
+                <fa-icon [icon]="faCircleCheck" class="text-[#1e63da]"></fa-icon>
+                <input
+                  type="text"
+                  placeholder="Enter verification"
+                  formControlName="verification_code"
+                  class="w-full border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+                />
+                <button
+                  type="button"
+                  class="rounded-full bg-[#edf5ff] px-4 py-2 text-xs font-black uppercase tracking-[0.08em] text-[#1e63da] transition hover:bg-[#dfeeff] disabled:cursor-not-allowed disabled:opacity-60"
+                  [disabled]="isSendingCode() || verificationCooldown() > 0"
+                  (click)="requestVerificationCode()"
+                >
+                  {{ isSendingCode()
+                    ? 'Sending...'
+                    : verificationCooldown() > 0
+                    ? 'Wait ' + verificationCooldown() + 's'
+                    : 'Send' }}
+                </button>
+              </span>
+              @if (verificationMessage()) {
+                <span class="text-sm font-semibold text-emerald-700">{{ verificationMessage() }}</span>
+              }
+              @if (verificationError()) {
+                <span class="text-sm font-semibold text-red-600">{{ verificationError() }}</span>
+              }
+            </label>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <label class="grid gap-2">
+                <span class="text-sm font-semibold text-[#314056]">Password</span>
+                <span class="flex items-center gap-3 rounded-2xl border border-[#d7dfef] bg-white px-4 py-4 shadow-sm">
+                  <fa-icon [icon]="faLock" class="text-[#1e63da]"></fa-icon>
+                  <input
+                    [type]="showCreatePasswords() ? 'text' : 'password'"
+                    placeholder="Create password"
+                    formControlName="password"
+                    class="w-full border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+                  />
+                </span>
+                @if (createForm.controls.password.invalid && createForm.controls.password.touched) {
+                  <span class="text-xs font-semibold text-red-600">Password must be at least 8 characters.</span>
+                }
+              </label>
+
+              <label class="grid gap-2">
+                <span class="text-sm font-semibold text-[#314056]">Reenter Password</span>
+                <span class="flex items-center gap-3 rounded-2xl border border-[#d7dfef] bg-white px-4 py-4 shadow-sm">
+                  <fa-icon [icon]="faLock" class="text-[#1e63da]"></fa-icon>
+                  <input
+                    [type]="showCreatePasswords() ? 'text' : 'password'"
+                    placeholder="Reenter password"
+                    formControlName="password_confirmation"
+                    class="w-full border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+                  />
+                </span>
+                @if (createForm.controls.password_confirmation.invalid && createForm.controls.password_confirmation.touched) {
+                  <span class="text-xs font-semibold text-red-600">Please reenter your password.</span>
+                }
+              </label>
+            </div>
+
+            <button
+              type="button"
+              class="flex w-fit items-center gap-2 rounded-full bg-[#edf5ff] px-4 py-2 text-sm font-semibold text-[#1e63da] transition hover:bg-[#dfeeff]"
+              (click)="toggleCreatePasswords()"
+            >
+              <fa-icon [icon]="showCreatePasswords() ? faEyeSlash : faEye"></fa-icon>
+              <span>{{ showCreatePasswords() ? 'Hide Password' : 'Show Password' }}</span>
+            </button>
+
+            <label class="flex items-start gap-3 rounded-2xl bg-[#f6faff] p-4 text-sm text-[#526174]">
+              <input
+                type="checkbox"
+                formControlName="agreed"
+                class="mt-1 h-4 w-4 rounded border-[#bfd4fb] text-[#1e63da] focus:ring-[#1e63da]"
+              />
+              <span>
+                I have read and agreed to the
+                <a href="/" class="font-semibold text-[#1e63da] no-underline hover:underline">
+                  privacy policy
+                </a>
+              </span>
+            </label>
+
+            <button
+              type="submit"
+              class="mt-2 rounded-2xl bg-[linear-gradient(135deg,#1e63da_0%,#1fb4d9_100%)] px-6 py-4 text-sm font-bold text-white shadow-[0_18px_32px_rgba(30,99,218,0.25)] transition hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
+              [disabled]="isLoading()"
+            >
+              {{ isLoading() ? 'Creating account...' : 'Create Your Account' }}
+            </button>
+
+            <button
+              type="button"
+              class="justify-self-start text-sm font-semibold text-[#1e63da] underline decoration-transparent transition hover:decoration-current"
+              (click)="setCreateMode(false)"
+            >
+              Back to login
+            </button>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+</section>

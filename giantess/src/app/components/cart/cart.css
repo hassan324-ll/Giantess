@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Extra polish (beyond Tailwind utility classes) */
+:host {
+  --ts-blue: #1e63da;
+  --ts-sky: #1fb4d9;
+}
+
+/* Smooth the sidebar in case of reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  aside {
+    transition: none !important;
+  }
+  .transition {
+    transition: none !important;
+  }
+}
+

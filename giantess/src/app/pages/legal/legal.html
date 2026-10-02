@@ -1,0 +1,57 @@
+<app-banner [title]="pageTitle" [breadcrumb]="breadcrumb"></app-banner>
+
+<main class="bg-[linear-gradient(180deg,#f7fbff_0%,#eef6ff_100%)] px-4 py-14 text-[#172033] sm:px-6 lg:px-8">
+  <section class="mx-auto grid w-full max-w-[980px] gap-6">
+    <article class="rounded-[24px] bg-white p-7 shadow-[0_18px_44px_rgba(20,71,167,0.08)] sm:p-9">
+      <p class="mb-3 text-xs font-black uppercase tracking-[0.24em] text-[#1fb4d9]">
+        GIANTESS Legal Notice
+      </p>
+      <h1 class="mb-5 text-3xl font-black leading-tight text-[#102033] sm:text-4xl">
+        {{ pageTitle }}
+      </h1>
+
+      @if (isPrivacyPage) {
+        <p class="text-[15px] font-semibold leading-8 text-[#5a687a]">
+          GIANTESS uses submitted contact details only to respond to product inquiries, quotation requests,
+          sourcing support, and related business communication. Information sent through forms or email is
+          handled for customer service and operational follow-up.
+        </p>
+      } @else {
+        <p class="text-[15px] font-semibold leading-8 text-[#5a687a]">
+          By using this website, visitors agree that GIANTESS content is provided for product reference,
+          sourcing, and business communication purposes. Product availability, specifications, and compatibility
+          details may change and should be confirmed with our team before purchase.
+        </p>
+      }
+    </article>
+
+    <article class="rounded-[24px] bg-white p-7 shadow-[0_18px_44px_rgba(20,71,167,0.08)] sm:p-9">
+      <h2 class="mb-4 text-2xl font-black text-[#102033]">Trademark Statement</h2>
+      <div class="grid gap-4 text-[15px] font-semibold leading-8 text-[#5a687a]">
+        <p class="m-0">
+          GIANTESS and lion head logo are registered trademarks of GIANTESS Barcode Corp. globally. All other
+          trademarks belong to their respective owners.
+        </p>
+        <p class="m-0">
+          All manufacturer-related brands, logos and product models are proprietary to their holders. Relevant
+          mentions herein are for reference only, without any affiliation or official endorsement implication.
+        </p>
+      </div>
+    </article>
+
+    <nav class="flex flex-wrap gap-3" aria-label="Related legal pages">
+      <a
+        routerLink="/legal-terms-of-use"
+        class="rounded-md bg-[#08b4dc] px-5 py-3 text-sm font-black text-white no-underline transition hover:bg-[#087da7]"
+      >
+        Legal Terms of Use
+      </a>
+      <a
+        routerLink="/privacy-policy"
+        class="rounded-md bg-white px-5 py-3 text-sm font-black text-[#087da7] no-underline shadow-[0_12px_28px_rgba(8,180,220,0.10)] transition hover:text-[#08b4dc]"
+      >
+        Privacy Policy
+      </a>
+    </nav>
+  </section>
+</main>

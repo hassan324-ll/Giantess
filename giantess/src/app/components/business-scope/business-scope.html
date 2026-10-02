@@ -1,0 +1,66 @@
+<section id="service-support" class="bg-[#f2fbff] px-4 py-12 text-[#102033] sm:px-6 sm:py-16 lg:px-8">
+  <div class="mx-auto w-full max-w-[1180px]">
+    <div class="mx-auto max-w-[780px] text-center">
+      <div class="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-[#fff4dc] text-[#087da7] shadow-[0_14px_34px_rgba(8,180,220,0.12)]">
+        <fa-icon [icon]="sectionIcon"></fa-icon>
+      </div>
+      <h2 class="text-3xl font-black leading-tight sm:text-4xl">Business Scope</h2>
+      <p class="mt-3 text-sm font-semibold leading-6 text-slate-600 sm:text-base">
+        Repair spare parts, refurbishment support, accessories, and customized supply solutions for barcode terminals
+        and industrial mobility devices.
+      </p>
+      <a
+        href="mailto:jasmine@giantess-cn.com"
+        class="mt-5 inline-flex rounded-full bg-white px-5 py-2 text-sm font-black text-[#087da7] no-underline shadow-[0_12px_28px_rgba(8,180,220,0.10)] transition hover:-translate-y-px hover:text-[#08b4dc]"
+      >
+        jasmine@giantess-cn.com
+      </a>
+    </div>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      @for (card of scopeCards; track card.title) {
+        <article
+          class="group relative flex min-h-[278px] flex-col overflow-hidden rounded-[24px] bg-white p-7 shadow-[0_20px_48px_rgba(15,23,42,0.10)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_24px_56px_rgba(8,180,220,0.16)]"
+        >
+          <fa-icon
+            class="pointer-events-none absolute -bottom-8 -right-4 text-[8rem] text-[#08b4dc]/[0.04] transition group-hover:text-[#f7b640]/[0.10]"
+            [icon]="watermarkIcon"
+          ></fa-icon>
+
+          <div class="relative z-10 flex items-start justify-between gap-4">
+            <span class="grid h-14 w-14 flex-none place-items-center rounded-full bg-[#fff4dc] text-2xl text-[#087da7] shadow-[inset_0_0_0_1px_rgba(247,182,64,0.28)]">
+              <fa-icon [icon]="card.icon"></fa-icon>
+            </span>
+            <span class="rounded-md bg-[#f2fbff] px-3 py-1 text-xs font-extrabold text-[#087da7]">
+              {{ card.eyebrow }}
+            </span>
+          </div>
+
+          <div class="relative z-10 mt-7">
+            <h3 class="text-xl font-black leading-snug text-[#102033]">{{ card.title }}</h3>
+            <p class="mt-4 text-sm font-medium leading-6 text-slate-600">{{ card.description }}</p>
+          </div>
+
+          <div class="relative z-10 mt-5 flex flex-wrap gap-2">
+            @for (tag of card.tags; track tag) {
+              <span class="rounded-md bg-[#f2f5fa] px-2.5 py-1 text-xs font-bold text-slate-600">{{ tag }}</span>
+            }
+          </div>
+
+          <div class="relative z-10 mt-auto pt-7">
+            <div class="mb-4 h-px bg-[#e6edf7]"></div>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-sm font-extrabold text-[#087da7]">GIANTESS</span>
+              <a
+                href="mailto:jasmine@giantess-cn.com"
+                class="rounded-md bg-[#08b4dc] px-4 py-2 text-xs font-extrabold text-white no-underline transition hover:bg-[#087da7]"
+              >
+                Email us
+              </a>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>

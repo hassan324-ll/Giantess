@@ -1,0 +1,28 @@
+<aside class="admin-sidebar">
+  <div class="sidebar-header">
+    <img src="logo.png" alt="Logo" class="sidebar-logo" />
+    <!-- <h2 class="sidebar-title">Admin</h2> -->
+  </div>
+
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li *ngFor="let item of menuItems" class="nav-item">
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+          <fa-icon [icon]="item.icon" class="nav-icon"></fa-icon>
+          <span class="nav-label">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button (click)="logout()" class="logout-btn">
+      <fa-icon [icon]="faSignOutAlt" class="nav-icon"></fa-icon>
+      <span>Logout</span>
+    </button>
+  </div>
+</aside>

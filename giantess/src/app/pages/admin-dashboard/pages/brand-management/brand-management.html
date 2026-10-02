@@ -1,0 +1,123 @@
+<div class="management-page">
+  <div class="management-header">
+    <div>
+      <h2>Brand Management</h2>
+      <p>Manage product brands, images, and metadata from the admin API.</p>
+    </div>
+    <button class="primary-button" type="button" (click)="showCreateForm()">Create brand</button>
+  </div>
+
+  <div class="feedback-row" *ngIf="errorMessage() || successMessage()">
+    <span class="error" *ngIf="errorMessage()">{{ errorMessage() }}</span>
+    <span class="success" *ngIf="successMessage()">{{ successMessage() }}</span>
+  </div>
+
+  <div *ngIf="isLoading()" class="loading-state">
+    <app-loading-spinner label="Loading brands"></app-loading-spinner>
+  </div>
+
+  <table class="management-table" *ngIf="!isLoading() && brands().length">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Slug</th>
+        <th>Image</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let brand of brands(); let brandIndex = index">
+        <td class="sequence-cell">{{ brandIndex + 1 }}</td>
+        <td>{{ brand.name }}</td>
+        <td>{{ brand.slug }}</td>
+        <td>
+          <img
+            [src]="getBrandImageUrl(brand)"
+            alt="{{ brand.name }}"
+            class="table-image"
+            (error)="useFallbackImage($event)"
+          />
+        </td>
+        <td>
+          <div class="table-actions">
+            <button
+              class="action-btn edit"
+              type="button"
+              (click)="showEditForm(brand)"
+              title="Edit {{ brand.name }}"
+              aria-label="Edit {{ brand.name }}"
+            >
+              <fa-icon [icon]="faPencilAlt"></fa-icon>
+            </button>
+            <button
+              class="action-btn delete"
+              type="button"
+              (click)="confirmDelete(brand)"
+              title="Delete {{ brand.name }}"
+              aria-label="Delete {{ brand.name }}"
+            >
+              <fa-icon [icon]="faTrash"></fa-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!isLoading() && !brands().length" class="empty-state">
+    No brands found yet. Use the button above to create your first brand.
+  </div>
+
+  <section class="modal-backdrop" *ngIf="modalOpen()">
+    <div class="modal-panel">
+      <h3>{{ activeBrandId ? 'Edit Brand' : 'Create Brand' }}</h3>
+      <form [formGroup]="brandForm" (ngSubmit)="submitBrand()" class="modal-form">
+        <label class="form-field">
+          <span class="field-label">Brand name</span>
+          <span class="field-control">
+            <fa-icon [icon]="faBox"></fa-icon>
+            <input formControlName="name" placeholder="Enter brand name" />
+          </span>
+          <span class="field-error" *ngIf="brandForm.controls['name'].invalid && brandForm.controls['name'].touched">
+            Brand name is required and must be at least 2 characters.
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Brand slug</span>
+          <span class="field-control">
+            <fa-icon [icon]="faLink"></fa-icon>
+            <input formControlName="slug" placeholder="brand-slug" />
+          </span>
+          <span class="field-error" *ngIf="brandForm.controls['slug'].invalid && brandForm.controls['slug'].touched">
+            Slug is required and should be lowercase alphanumeric with dashes.
+          </span>
+        </label>
+
+        <label class="form-field">
+          <span class="field-label">Brand image</span>
+          <span class="field-control field-control--file">
+            <fa-icon [icon]="faImage"></fa-icon>
+            <input type="file" (change)="onImageSelected($event)" />
+          </span>
+        </label>
+
+        <div class="modal-actions">
+          <button class="secondary-button" type="button" (click)="closeModal()">Cancel</button>
+          <button class="primary-button" type="submit" [disabled]="formLoading()">
+            {{ formLoading() ? 'Saving...' : activeBrandId ? 'Update brand' : 'Create brand' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <app-confirm-dialog
+    [visible]="confirmOpen()"
+    title="Delete brand"
+    message="This action will permanently delete the selected brand. Continue?"
+    (confirm)="deleteBrand()"
+    (cancel)="closeModal()"
+  ></app-confirm-dialog>
+</div>

@@ -1,0 +1,318 @@
+<app-banner title="Contact Us" breadcrumb="Contact Us"></app-banner>
+
+<section id="contact-form" class="bg-[linear-gradient(180deg,#f7fbff_0%,#edf5ff_100%)] py-16">
+  <div class="mx-auto grid w-[min(1240px,calc(100%-32px))] gap-8 lg:grid-cols-[1.02fr_0.98fr]">
+    <div class="rounded-[32px] bg-white p-7 shadow-[0_24px_60px_rgba(20,71,167,0.08)] sm:p-9 lg:p-10">
+      
+     
+
+      <!-- <div class="my-7 h-px w-full bg-[linear-gradient(90deg,#d9e7fb_0%,transparent_100%)]"></div> -->
+
+      <form class="grid gap-5" [formGroup]="contactForm" (ngSubmit)="submitContact()">
+        @if (successMessage) {
+          <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+            {{ successMessage }}
+          </div>
+        }
+
+        @if (errorMessage) {
+          <div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label class="grid gap-2">
+            <span class="text-sm font-semibold text-[#314056]">Name</span>
+            <span class="flex items-center gap-3 rounded-2xl border border-[#d7dfef] bg-[#f9fbff] px-4 py-4 shadow-sm">
+              <fa-icon [icon]="faUser" class="text-[#1e63da]"></fa-icon>
+              <input
+                type="text"
+                formControlName="name"
+                placeholder="Name"
+                class="w-full border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+              />
+            </span>
+          </label>
+
+          <label class="grid gap-2">
+            <span class="text-sm font-semibold text-[#314056]">Email</span>
+            <span class="flex items-center gap-3 rounded-2xl border border-[#d7dfef] bg-[#f9fbff] px-4 py-4 shadow-sm">
+              <fa-icon [icon]="faEnvelope" class="text-[#1e63da]"></fa-icon>
+              <input
+                type="email"
+                formControlName="email"
+                placeholder="Email"
+                class="w-full border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+              />
+            </span>
+          </label>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <label class="grid gap-2">
+            <span class="text-sm font-semibold text-[#314056]">Phone</span>
+            <span class="flex items-center gap-3 rounded-2xl border border-[#d7dfef] bg-[#f9fbff] px-4 py-4 shadow-sm">
+              <fa-icon [icon]="faPhone" class="text-[#1e63da]"></fa-icon>
+              <input
+                type="tel"
+                formControlName="phone"
+                placeholder="Phone"
+                class="w-full border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+              />
+            </span>
+          </label>
+
+          <label class="grid gap-2">
+            <span class="text-sm font-semibold text-[#314056]">Subject</span>
+            <span class="flex items-center gap-3 rounded-2xl border border-[#d7dfef] bg-[#f9fbff] px-4 py-4 shadow-sm">
+              <fa-icon [icon]="faMessage" class="text-[#1e63da]"></fa-icon>
+              <input
+                type="text"
+                formControlName="subject"
+                placeholder="Subject"
+                class="w-full border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+              />
+            </span>
+          </label>
+        </div>
+
+        <label class="grid gap-2">
+          <span class="text-sm font-semibold text-[#314056]">Message</span>
+          <span class="flex items-start gap-3 rounded-2xl border border-[#d7dfef] bg-[#f9fbff] px-4 py-4 shadow-sm">
+            <fa-icon [icon]="faMessage" class="mt-1 text-[#1e63da]"></fa-icon>
+            <textarea
+              rows="5"
+              formControlName="message"
+              placeholder="Message"
+              class="w-full resize-none border-0 bg-transparent text-sm text-[#1b2435] outline-none placeholder:text-slate-400"
+            ></textarea>
+          </span>
+        </label>
+
+        <label class="flex items-start gap-3 rounded-2xl bg-[#f6faff] p-4 text-sm text-[#526174]">
+          <input
+            type="checkbox"
+            formControlName="privacyAccepted"
+            class="mt-1 h-4 w-4 rounded border-[#bfd4fb] text-[#1e63da] focus:ring-[#1e63da]"
+          />
+          <span>
+            I read and agree with
+            <a routerLink="/privacy-policy" class="font-semibold text-[#1e63da] no-underline hover:underline">
+              privacy policy
+            </a>
+          </span>
+        </label>
+
+        <button
+          type="submit"
+          [disabled]="isSubmitting"
+          class="w-fit rounded-2xl bg-[linear-gradient(135deg,#1e63da_0%,#1fb4d9_100%)] px-7 py-4 text-sm font-bold text-white shadow-[0_18px_32px_rgba(30,99,218,0.25)] transition hover:-translate-y-px"
+        >
+          {{ isSubmitting ? 'Sending...' : 'Submit Message' }}
+        </button>
+      </form>
+    </div>
+
+    <div class="grid gap-6">
+      <div id="contact-details" class="rounded-[32px] bg-[linear-gradient(135deg,#0f8a96_0%,#1e63da_100%)] p-7 text-white shadow-[0_24px_60px_rgba(20,71,167,0.16)] sm:p-8">
+        <p class="mb-5 text-xs font-bold uppercase tracking-[0.26em] text-white/80">Get In Touch</p>
+        <div class="grid gap-5 text-[15px] leading-8 text-white/92">
+          <div class="flex gap-4">
+            <span class="mt-1 grid h-11 w-11 flex-none place-items-center rounded-full bg-white/12 text-white">
+              <fa-icon [icon]="faLocationDot"></fa-icon>
+            </span>
+            <div>
+              <p class="mb-1 text-lg font-black text-white">Address</p>
+              <p class="m-0">
+                Siu On Plaza, 482 Jaffe Road, Causeway Bay, Hong Kong
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <span class="mt-1 grid h-11 w-11 flex-none place-items-center rounded-full bg-white/12 text-white">
+              <fa-icon [icon]="faPhone"></fa-icon>
+            </span>
+            <div>
+              <p class="mb-1 text-lg font-black text-white">Phone & Fax</p>
+              <p class="m-0">Tel: +86 13142211581</p>
+              <p class="m-0">Fax: +86 13142211581</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <span class="mt-1 grid h-11 w-11 flex-none place-items-center rounded-full bg-white/12 text-white">
+              <fa-icon [icon]="faEnvelope"></fa-icon>
+            </span>
+            <div>
+              <p class="mb-1 text-lg font-black text-white">Email</p>
+              <a class="m-0 text-white no-underline hover:underline" href="mailto:jasmine@giantess-cn.com">
+                   info@giantess-cn.com
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="account-managers" class="bg-[linear-gradient(180deg,#edf5ff_0%,#eef5ff_100%)] pb-16">
+  <div class="mx-auto w-[min(1240px,calc(100%-32px))] rounded-[30px] bg-white p-6 shadow-[0_24px_60px_rgba(20,71,167,0.08)] sm:p-8 lg:p-10">
+    <div class="mb-8 border-b border-[#e4edf9] pb-6 text-center">
+      <div class="mx-auto max-w-3xl">
+        <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.24em] text-[#1fb4d9]">Account Managers</p>
+        <h2 class="text-3xl font-black leading-tight text-[#1b2435] sm:text-4xl">
+          Contact Our Team
+        </h2>
+        <p class="mt-3 text-[15px] font-semibold leading-7 text-[#5a687a]">
+          Reach the right account manager for quotes, sourcing requests, product availability, and regional B2B support.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      @for (manager of accountManagers; track manager.email) {
+        <article class="group relative overflow-hidden rounded-[18px] border border-[#e4edf9] bg-[linear-gradient(180deg,#ffffff_0%,#f8fbff_100%)] p-6 shadow-[0_18px_44px_rgba(20,71,167,0.06)] transition hover:-translate-y-1 hover:border-[#1fb4d9]/45 hover:shadow-[0_24px_54px_rgba(30,99,218,0.12)]">
+          <div class="absolute right-0 top-0 h-24 w-24 rounded-bl-[42px] bg-[#e8f7ff] transition group-hover:bg-[#d9f2ff]"></div>
+
+          <div class="relative">
+            <h3 class="text-center text-xl font-black text-[#1b2435]">{{ manager.name }}</h3>
+            <p class="mt-1 text-center text-sm font-extrabold text-[#1e63da]">{{ manager.jobTitle }}</p>
+
+            <div class="mt-6 grid gap-4 text-sm leading-6 text-[#5a687a]">
+              <div class="flex gap-3">
+                <span class="mt-0.5 grid h-8 w-8 flex-none place-items-center rounded-full bg-[#e8f7ff] text-[#1e63da]">
+                  <fa-icon [icon]="faEnvelope"></fa-icon>
+                </span>
+                <div class="min-w-0">
+                  <p class="m-0 text-xs font-black uppercase tracking-[0.12em] text-slate-400">Email</p>
+                  <a class="break-words font-bold text-[#1e63da] no-underline hover:underline" [href]="'mailto:' + manager.email">
+                    {{ manager.email }}
+                  </a>
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <span class="mt-0.5 grid h-8 w-8 flex-none place-items-center rounded-full bg-[#e8f7ff] text-[#1e63da]">
+                  <fa-icon [icon]="faBriefcase"></fa-icon>
+                </span>
+                <div>
+                  <p class="m-0 text-xs font-black uppercase tracking-[0.12em] text-slate-400">Responsibility</p>
+                  <p class="m-0 font-semibold text-[#526174]">{{ manager.responsibility }}</p>
+                </div>
+              </div>
+
+              <div class="flex gap-3">
+                <span class="mt-0.5 grid h-8 w-8 flex-none place-items-center rounded-full bg-[#e8f7ff] text-[#1e63da]">
+                  <fa-icon [icon]="faGlobe"></fa-icon>
+                </span>
+                <div>
+                  <p class="m-0 text-xs font-black uppercase tracking-[0.12em] text-slate-400">Region</p>
+                  <p class="m-0 font-semibold text-[#526174]">{{ manager.region }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section id="service-support" class="bg-[linear-gradient(180deg,#eef5ff_0%,#f8fbff_100%)] pb-16">
+  <div class="mx-auto mb-8 w-[min(1240px,calc(100%-32px))] overflow-hidden rounded-[30px] bg-white shadow-[0_18px_44px_rgba(20,71,167,0.08)]">
+    <div class="border-b border-[#e4edf9] px-7 py-5">
+      <h3 class="text-2xl font-black text-[#1b2435]">Find Us on Map</h3>
+    </div>
+    <div class="h-[360px] w-full sm:h-[420px] lg:h-[460px]">
+      <iframe
+        title="Giantess Hong Kong office map"
+        class="h-full w-full border-0"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=Rm:27,%208/F,%20Blk%201%20Golden%20Industrial%20Building%20No.%2016-26%20Kwai%20Tak%20Street%20Kwai%20Chung,%20NT,%20Hong%20Kong&z=15&output=embed"
+      ></iframe>
+    </div>
+  </div>
+
+  <div class="mx-auto grid w-[min(1240px,calc(100%-32px))] gap-5 lg:grid-cols-2">
+    <article class="rounded-[30px] bg-white p-7 shadow-[0_18px_44px_rgba(20,71,167,0.08)] sm:p-8">
+      <p class="mb-2 text-[11px] font-bold uppercase tracking-[0.22em] text-[#1fb4d9]">Contact Support</p>
+      <h3 class="mb-3 text-[2rem] font-black leading-[1.05] tracking-[-0.03em] text-[#1b2435]">
+        Seamless Communication,
+        <span class="block font-serif italic text-[#1447a7]">Global Impact.</span>
+      </h3>
+      <h4 class="mb-3 text-xl font-black text-[#1f2f45]">Global B2B Barcode Spare Parts Support</h4>
+      <div class="mb-4 h-px w-full bg-[linear-gradient(90deg,#d9e7fb_0%,transparent_100%)]"></div>
+      <p class="text-[15px] leading-8 text-[#5a687a]">
+        Contact GIANTESS for barcode spare parts, accessories, repair support, and B2B sourcing
+        inquiries. We work with repair centers, distributors, refurbishers, resellers, and
+        business buyers looking for reliable supply of barcode device parts and related products.
+        You can also email
+        <a class="font-bold text-[#1e63da] no-underline hover:underline" href="mailto:jasmine@giantess-cn.com">
+          jasmine@giantess-cn.com
+        </a>.
+      </p>
+    </article>
+
+    <div class="relative flex min-h-[320px] items-center justify-center rounded-[30px] bg-white p-4 shadow-[0_18px_44px_rgba(20,71,167,0.08)] sm:min-h-[380px]">
+      <img
+        src="contact-img.jpg"
+        alt="Contact Giantess"
+        class="max-h-full w-full rounded-[22px] object-contain"
+      />
+    </div>
+
+    <article class="rounded-[30px] bg-white p-7 shadow-[0_18px_44px_rgba(20,71,167,0.08)] sm:p-8">
+      <h3 class="mb-3 text-2xl font-black text-[#1b2435]">Contact Us for Quotes, Sourcing, and Product Inquiries</h3>
+      <p class="text-[15px] leading-8 text-[#5a687a]">
+        GIANTESS supports customers across the USA, Europe, Latin America, Brazil, and other
+        international markets. Whether you need a replacement part, a compatible component,
+        accessory supply, or long-term sourcing support, our team is ready to help with practical
+        B2B communication.
+      </p>
+    </article>
+
+    <article class="rounded-[30px] bg-[linear-gradient(135deg,#1e63da_0%,#1fb4d9_100%)] p-7 text-white shadow-[0_24px_60px_rgba(20,71,167,0.16)] sm:p-8">
+      <h3 class="mb-3 text-2xl font-black">Services and Brand Support</h3>
+      <p class="text-[15px] leading-8 text-white/92">
+        You can contact us for product availability, quote requests, bulk orders, compatibility
+        questions, worldwide shipping inquiries, and partnership discussions. We support barcode
+        scanners, mobile computers, barcode printers, rugged terminals, and related accessories
+        from leading industry brands.
+      </p>
+    </article>
+
+    <article class="rounded-[30px] bg-white p-7 shadow-[0_18px_44px_rgba(20,71,167,0.08)] sm:p-8">
+      <h3 class="mb-3 text-2xl font-black text-[#1b2435]">
+        Support for Repair Centers, Distributors, and Refurbishers
+      </h3>
+      <p class="text-[15px] leading-8 text-[#5a687a]">
+        We aim to provide clear communication, accurate product details, and responsive support
+        for business buyers. If you already know the brand, model, part name, or part number you
+        need, send it with your inquiry so we can respond more efficiently.
+      </p>
+    </article>
+
+    <article class="rounded-[30px] border border-[rgba(30,99,218,0.08)] bg-[linear-gradient(180deg,#ffffff_0%,#f4f9ff_100%)] p-7 shadow-[0_18px_44px_rgba(20,71,167,0.08)] sm:p-8">
+      <h3 class="mb-3 text-2xl font-black text-[#1b2435]">Send your inquiry to GIANTESS</h3>
+      <p class="mb-4 text-[15px] leading-8 text-[#5a687a]">
+        Need barcode spare parts or repair supply support? Contact GIANTESS today to discuss your
+        B2B sourcing, quote request, or product inquiry.
+      </p>
+      <a
+        href="mailto:jasmine@giantess-cn.com"
+        class="mb-4 inline-flex rounded-full bg-[#e8f7ff] px-5 py-2 text-sm font-black text-[#1e63da] no-underline transition hover:bg-[#d9f2ff]"
+      >
+        jasmine@giantess-cn.com
+      </a>
+      <p class="text-[15px] leading-8 text-[#5a687a]">
+        We focus on practical communication, dependable sourcing support, and long-term business
+        relationships that help service teams, distributors, and refurbishers move faster with
+        confidence.
+      </p>
+    </article>
+  </div>
+</section>

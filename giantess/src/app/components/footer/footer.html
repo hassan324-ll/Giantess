@@ -1,0 +1,195 @@
+<footer class="bg-[#f2fbff] pt-10 text-[#102033]">
+  <section
+    class="relative z-10 mx-auto grid w-[min(1020px,calc(100%-32px))] items-center gap-8 overflow-hidden rounded-[18px] bg-[#08b4dc] px-6 py-8 text-white shadow-[0_24px_60px_rgba(8,180,220,0.22)] sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:px-12"
+    aria-labelledby="newsletter-title"
+  >
+    <div class="relative mx-auto flex h-44 w-full max-w-[360px] items-center justify-center sm:h-52 lg:mx-0">
+      <div class="absolute inset-x-8 bottom-6 h-8 rounded-full bg-black/20 blur-xl"></div>
+      <img
+        class="relative z-10 max-h-full w-full object-contain drop-shadow-[0_18px_26px_rgba(0,0,0,0.24)]"
+        [src]="newsletterImagePath"
+        alt="Barcode scanners and printing equipment"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="mx-auto max-w-[520px] text-center lg:mx-0 lg:text-left">
+      <p class="mb-3 text-sm font-extrabold text-[#fff4dc]">Giantess Updates</p>
+      <h2 id="newsletter-title" class="text-2xl font-black leading-tight sm:text-3xl lg:text-[2.15rem]">
+        Subscribe for latest barcode hardware deals
+      </h2>
+      <p class="mt-4 text-sm font-semibold leading-6 text-white/85">
+        Get product updates, refurbished device offers, and stock alerts for scanners, printers, mobile computers,
+        and accessories.
+      </p>
+
+      <form class="mt-6 flex min-h-12 overflow-hidden rounded-full bg-white p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+        <label class="sr-only" for="footer-email">Email address</label>
+        <span class="grid w-11 place-items-center text-[#087da7]">
+          <fa-icon [icon]="faEnvelope"></fa-icon>
+        </span>
+        <input
+          id="footer-email"
+          type="email"
+          placeholder="Enter your email"
+          class="min-w-0 flex-1 bg-transparent text-sm font-semibold text-[#102033] outline-none placeholder:text-slate-400"
+        />
+        <button
+          type="submit"
+          class="grid h-10 w-10 place-items-center rounded-full bg-[#f7b640] text-[#102033] transition hover:bg-[#eaa72f] sm:w-auto sm:px-5"
+          aria-label="Subscribe"
+        >
+          <span class="hidden text-sm font-extrabold sm:inline">Subscribe</span>
+          <fa-icon class="sm:hidden" [icon]="faPaperPlane"></fa-icon>
+        </button>
+      </form>
+
+      <p class="mt-4 text-xs font-medium leading-5 text-white/75">
+        You can unsubscribe at any time. Product emails only, no clutter.
+      </p>
+    </div>
+  </section>
+
+  <section
+    class="-mt-14 w-full bg-white pb-0 pt-24 shadow-[0_18px_55px_rgba(8,125,167,0.08)]"
+  >
+    <div class="mx-auto grid w-full max-w-[1200px] gap-10 border-b border-[#d7dfef] px-5 pb-10 sm:px-8 md:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_0.9fr_0.9fr_1.2fr] lg:px-12">
+      <div>
+        <a routerLink="/home" class="inline-flex items-center" aria-label="Go to Giantess home">
+          <img class="h-12 w-auto object-contain" [src]="logoPath" alt="Giantess logo" />
+        </a>
+        <p class="mt-4 text-lg font-black leading-tight text-[#087da7]">Keep It Working</p>
+        <p class="mt-5 max-w-[300px] text-sm font-medium leading-6 text-slate-600">
+          Giantess supplies rugged mobile computers, barcode scanners, printers, and parts for teams that need
+          dependable hardware every day.
+        </p>
+
+        <div class="mt-6">
+          <p class="mb-3 text-sm font-black text-[#102033]">Follow Us</p>
+          <div class="flex flex-wrap gap-3" aria-label="Social media links">
+            @for (item of socialMediaItems; track item.label) {
+              <a
+                class="grid h-10 w-10 place-items-center rounded-full border border-[#d7dfef] bg-[#fff4dc] text-[#087da7] transition hover:-translate-y-0.5 hover:border-[#f7b640] hover:bg-[#f2fbff] focus:outline-none focus:ring-2 focus:ring-[#f7b640] focus:ring-offset-2"
+                [href]="item.href"
+                [attr.aria-label]="item.label"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <fa-icon [icon]="item.icon"></fa-icon>
+              </a>
+            }
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-3" aria-label="Footer shortcuts">
+          @for (item of socialItems; track item.label) {
+            <a
+              class="grid h-10 w-10 place-items-center rounded-full border border-[#d7dfef] bg-[#fff4dc] text-[#087da7] transition hover:-translate-y-0.5 hover:border-[#f7b640] hover:bg-[#f2fbff]"
+              [href]="item.href"
+              [attr.aria-label]="item.label"
+            >
+              <fa-icon [icon]="item.icon"></fa-icon>
+            </a>
+          }
+        </div>
+      </div>
+
+      <nav aria-label="Company links">
+        <h3 class="mb-5 text-base font-black">Company</h3>
+        <ul class="space-y-3">
+          @for (link of companyLinks; track link.label) {
+            <li>
+              <a
+                class="text-sm font-semibold text-slate-600 no-underline transition hover:text-[#087da7]"
+                [routerLink]="link.route"
+                [fragment]="link.fragment"
+              >
+                {{ link.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <nav aria-label="Support links">
+        <h3 class="mb-5 text-base font-black">Support</h3>
+        <ul class="space-y-3">
+          @for (link of supportLinks; track link.label) {
+            <li>
+              <a
+                class="text-sm font-semibold text-slate-600 no-underline transition hover:text-[#087da7]"
+                [routerLink]="link.route"
+                [fragment]="link.fragment"
+              >
+                {{ link.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <nav aria-label="Product category links">
+        <h3 class="mb-5 text-base font-black">Categories</h3>
+        <ul class="space-y-3">
+          @for (link of categoryLinks; track link.label) {
+            <li>
+              <a
+                class="text-sm font-semibold text-slate-600 no-underline transition hover:text-[#087da7]"
+                [routerLink]="link.route"
+                [fragment]="link.fragment"
+              >
+                {{ link.label }}
+              </a>
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <div>
+        <h3 class="mb-5 text-base font-black">Contact Us</h3>
+        <ul class="space-y-4">
+          @for (item of contactItems; track item.label) {
+            <li>
+              <a class="flex items-start gap-3 text-sm font-semibold text-slate-600 no-underline transition hover:text-[#087da7]" [href]="item.href">
+                <span class="mt-0.5 grid h-8 w-8 flex-none place-items-center rounded-full bg-[#fff4dc] text-[#087da7]">
+                  <fa-icon [icon]="item.icon"></fa-icon>
+                </span>
+                <span class="leading-6">{{ item.label }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+
+        <div class="mt-6 grid gap-2">
+          @for (item of featureItems; track item.label) {
+            <div class="flex items-center gap-3 rounded-full bg-[#f2fbff] px-3 py-2 text-sm font-bold text-[#102033]">
+              <fa-icon class="text-[#087da7]" [icon]="item.icon"></fa-icon>
+              <span>{{ item.label }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="mx-auto flex w-full max-w-[1200px] flex-col gap-5 px-5 py-6 text-sm font-semibold text-slate-600 sm:px-8 lg:px-12">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p class="m-0">&copy; 2026 Giantess. All rights reserved.</p>
+        <nav class="flex flex-wrap items-center gap-x-3 gap-y-2" aria-label="Legal links">
+          <a class="no-underline transition hover:text-[#087da7]" routerLink="/legal-terms-of-use">Legal Terms of Use</a>
+          <span aria-hidden="true">|</span>
+          <a class="no-underline transition hover:text-[#087da7]" routerLink="/privacy-policy">Privacy Policy</a>
+        </nav>
+      </div>
+      <div class="max-w-[980px] space-y-2 text-xs font-semibold leading-6 text-slate-500">
+        <p class="m-0">
+          GIANTESS and lion head logo are registered trademarks of GIANTESS Barcode Corp. globally. All other
+          trademarks belong to their respective owners.
+        </p>
+        <p class="m-0">
+          All manufacturer-related brands, logos and product models are proprietary to their holders. Relevant mentions
+          herein are for reference only, without any affiliation or official endorsement implication.
+        </p>
+      </div>
+    </div>
+  </section>
+</footer>

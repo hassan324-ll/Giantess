@@ -1,0 +1,289 @@
+<section class="min-h-screen bg-[#f4f5f7] px-4 py-8 text-[#111827] sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+    <nav class="mb-6 flex flex-wrap items-center gap-2 text-sm font-bold text-slate-600">
+      <a routerLink="/home" class="text-[#1e63da] no-underline hover:text-[#00aeef]">Home</a>
+      <span>/</span>
+      <a
+        [routerLink]="['/brands', brandSlug(), 'categories', categorySlug(), 'models', modelSlug(), 'products']"
+        class="text-[#1e63da] no-underline hover:text-[#00aeef]"
+      >
+        {{ getModelName(product()) }}
+      </a>
+      <span>/</span>
+      <span class="line-clamp-1 max-w-[640px] text-[#172033]">
+        {{ product()?.name || 'Product Details' }}
+      </span>
+    </nav>
+
+    @if (isLoading()) {
+      <div class="grid animate-pulse gap-6 lg:grid-cols-[280px_1fr]">
+        <div class="h-[520px] rounded-lg bg-white"></div>
+        <div class="rounded-lg bg-white p-6">
+          <div class="h-8 w-4/5 rounded bg-slate-100"></div>
+          <div class="mt-6 grid gap-6 md:grid-cols-[0.9fr_1.1fr]">
+            <div class="h-[360px] rounded bg-slate-100"></div>
+            <div>
+              <div class="h-5 w-48 rounded bg-slate-100"></div>
+              <div class="mt-6 h-12 w-52 rounded bg-slate-100"></div>
+              <div class="mt-8 h-12 w-full rounded bg-slate-100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="rounded-lg border border-red-100 bg-white p-10 text-center shadow-[0_18px_45px_rgba(15,23,42,0.07)]">
+        <h1 class="text-2xl font-black text-[#172033]">Product unavailable</h1>
+        <p class="mx-auto mt-3 max-w-lg text-sm font-semibold leading-6 text-red-600">
+          {{ errorMessage() }}
+        </p>
+        <a
+          [routerLink]="['/brands', brandSlug(), 'categories', categorySlug(), 'models', modelSlug(), 'products']"
+          class="mt-7 inline-flex min-h-11 items-center justify-center gap-2 rounded bg-[#00aeef] px-6 text-sm font-bold text-white no-underline transition hover:bg-[#008fd0]"
+        >
+          <fa-icon [icon]="faArrowLeft"></fa-icon>
+          Back to products
+        </a>
+      </div>
+    } @else if (product(); as selectedProduct) {
+      <div class="grid gap-6 lg:grid-cols-[280px_1fr]">
+        <aside class="hidden self-start overflow-hidden rounded-lg border border-[#d7f3ff] bg-white shadow-[0_12px_30px_rgba(0,174,239,0.08)] lg:block">
+          <div class="border-b border-[#d7f3ff] bg-[#00aeef] px-5 py-4 text-lg font-black text-white">
+            Categories
+          </div>
+
+          @for (brand of catalog; track brand.id) {
+            <div class="border-b border-[#e8f7ff]">
+              <button
+                type="button"
+                class="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm font-black uppercase tracking-[0.01em] transition"
+                [ngClass]="
+                  isActiveBrand(brand.id)
+                    ? 'bg-[#e8f7ff] text-[#087da7]'
+                    : 'bg-white text-[#172033] hover:bg-[#f4fbff] hover:text-[#087da7]'
+                "
+                (click)="toggleBrand(brand.id)"
+              >
+                <span>{{ getBrandDisplayName(brand) }}</span>
+                <span class="grid h-6 w-6 flex-none place-items-center rounded bg-[#00aeef] text-xs text-white">
+                  <fa-icon [icon]="isBrandExpanded(brand.id) ? faMinus : faPlus"></fa-icon>
+                </span>
+              </button>
+
+              @if (isBrandExpanded(brand.id)) {
+                <div class="bg-white">
+                  @for (section of brand.sections; track section.slug) {
+                    <div class="border-t border-[#edf7fc]">
+                      <button
+                        type="button"
+                        class="flex w-full items-center justify-between gap-3 px-5 py-2.5 text-left text-sm font-extrabold transition"
+                        [ngClass]="
+                          isActiveCategory(brand.id, section)
+                            ? 'bg-[#00aeef] text-white'
+                            : 'bg-white text-[#334155] hover:bg-[#f4fbff] hover:text-[#087da7]'
+                        "
+                        (click)="toggleCategory(brand.id, section.slug)"
+                      >
+                        <span>{{ section.title }}</span>
+                        <span
+                          class="grid h-5 w-5 flex-none place-items-center rounded text-[0.65rem]"
+                          [ngClass]="isActiveCategory(brand.id, section) ? 'bg-white text-[#00aeef]' : 'bg-[#f6b33f] text-white'"
+                        >
+                          <fa-icon [icon]="isCategoryExpanded(brand.id, section.slug) ? faMinus : faPlus"></fa-icon>
+                        </span>
+                      </button>
+
+                      @if (isCategoryExpanded(brand.id, section.slug)) {
+                        <div class="bg-[#fbfdff]">
+                          @for (model of section.items; track model.slug) {
+                            <a
+                              [routerLink]="['/brands', brand.id, 'categories', section.slug, 'models', model.slug, 'products']"
+                              class="line-clamp-2 block border-t border-[#edf7fc] px-7 py-2.5 text-sm font-bold no-underline transition"
+                              [ngClass]="
+                                isActiveModel(brand.id, section.slug, model.slug)
+                                  ? 'bg-[#fff4dc] text-[#087da7]'
+                                  : 'text-slate-600 hover:bg-[#e8f7ff] hover:text-[#087da7]'
+                              "
+                            >
+                              {{ model.name }}
+                            </a>
+                          }
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </aside>
+
+        <main class="min-w-0">
+          <article class="rounded-lg border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.06)] sm:p-7">
+            <h1 class="border-b border-slate-200 pb-4 text-2xl font-semibold leading-tight text-[#343844] sm:text-3xl">
+              {{ selectedProduct.name }}
+            </h1>
+
+            <div class="mt-6 grid gap-7 md:grid-cols-[0.9fr_1.1fr]">
+              <div>
+                <div class="flex min-h-[340px] items-center justify-center border border-[#9cc6df] bg-white p-5">
+                  <img
+                    class="max-h-[310px] w-full object-contain"
+                    [src]="getSelectedProductImage(selectedProduct)"
+                    [alt]="selectedProduct.name"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
+
+                @if (getProductImages(selectedProduct).length > 1) {
+                  <div class="product-gallery-thumbs mt-3">
+                    @for (image of getProductImages(selectedProduct); track image; let imageIndex = $index) {
+                      <button
+                        type="button"
+                        class="product-gallery-thumb"
+                        [class.product-gallery-thumb--active]="selectedImageIndex() === imageIndex"
+                        [attr.aria-label]="'View product image ' + (imageIndex + 1)"
+                        (click)="selectProductImage(imageIndex)"
+                      >
+                        <img [src]="image" [alt]="selectedProduct.name + ' image ' + (imageIndex + 1)" loading="lazy" decoding="async" />
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+
+              <div>
+                <div class="border-b border-slate-200 pb-5 text-base font-semibold text-[#343844]">
+                  <p class="m-0">SKU: <span class="font-black">{{ getSku(selectedProduct) }}</span></p>
+                  <p class="m-0 mt-1">
+                    Availability:
+                    <span [ngClass]="getStockTextClass(selectedProduct)">
+                      {{ getStockLabel(selectedProduct) }}
+                    </span>
+                  </p>
+                </div>
+
+                <p class="m-0 border-b border-slate-200 py-5 text-5xl font-light tracking-tight text-[#343844]">
+                  {{ getProductPrice(selectedProduct) }}
+                </p>
+
+                <div class="mt-5 grid gap-4 rounded-lg border border-slate-200 bg-[#fbfdff] p-4 sm:grid-cols-2">
+                  <div>
+                    <p class="m-0 text-xs font-black uppercase tracking-[0.14em] text-slate-400">SKU</p>
+                    <p class="m-0 mt-2 text-sm font-black text-[#172033]">{{ getSku(selectedProduct) }}</p>
+                  </div>
+                  <div>
+                    <p class="m-0 text-xs font-black uppercase tracking-[0.14em] text-slate-400">Model</p>
+                    <p class="m-0 mt-2 text-sm font-black text-[#172033]">{{ getModelName(selectedProduct) }}</p>
+                  </div>
+                </div>
+
+                <a
+                  href="mailto:info@giantess-cn.com?subject=Discount inquiry"
+                  class="mt-5 flex items-center gap-3 rounded-lg border border-[#d7f3ff] bg-[#f4fbff] px-4 py-3 text-[#172033] no-underline transition hover:border-[#00aeef] hover:bg-[#e8f7ff]"
+                >
+                  <span class="grid h-11 w-11 flex-none place-items-center rounded-full bg-[#fff4dc] text-[#f6b33f]">
+                    <fa-icon [icon]="faPercent"></fa-icon>
+                  </span>
+                  <span class="min-w-0">
+                    <span class="block text-sm font-black text-[#087da7]">Email us to get a discount</span>
+                    <span class="mt-0.5 block text-xs font-bold text-slate-500">info@giantess-cn.com</span>
+                  </span>
+                  <fa-icon class="ml-auto flex-none text-[#00aeef]" [icon]="faEnvelope"></fa-icon>
+                </a>
+              </div>
+            </div>
+
+            <section class="mt-8">
+              <div class="flex border-b border-slate-200">
+                <span class="bg-[#00aeef] px-6 py-3 text-sm font-black text-white">Description</span>
+              </div>
+              <div class="border border-t-0 border-[#d7f3ff] bg-[#f4fbff] px-5 py-5 text-base font-semibold leading-8 text-slate-700">
+                {{ getDescription(selectedProduct) }}
+              </div>
+              <div class="mt-4 flex flex-wrap items-center gap-3 text-sm">
+                <span class="bg-[#00aeef] px-3 py-2 font-black text-white">SKU:</span>
+                <span class="bg-[#e8f7ff] px-3 py-2 font-bold text-[#1e63da]">{{ getSku(selectedProduct) }}</span>
+              </div>
+            </section>
+
+            <div class="mt-8 grid gap-4 border-t border-[#eef2f7] pt-6 sm:grid-cols-3">
+              <div class="flex items-center gap-3">
+                <span class="grid h-11 w-11 place-items-center rounded-full bg-[#e8f7ff] text-[#1e63da]">
+                  <fa-icon [icon]="faCheckCircle"></fa-icon>
+                </span>
+                <p class="m-0 text-sm font-extrabold text-[#172033]">Verified industrial part</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="grid h-11 w-11 place-items-center rounded-full bg-[#e8f7ff] text-[#1e63da]">
+                  <fa-icon [icon]="faTruckFast"></fa-icon>
+                </span>
+                <p class="m-0 text-sm font-extrabold text-[#172033]">Worldwide shipping support</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="grid h-11 w-11 place-items-center rounded-full bg-[#e8f7ff] text-[#1e63da]">
+                  <fa-icon [icon]="faShieldHalved"></fa-icon>
+                </span>
+                <p class="m-0 text-sm font-extrabold text-[#172033]">Secure inquiry support</p>
+              </div>
+            </div>
+          </article>
+
+          @if (relatedProducts().length) {
+            <section class="mt-8">
+              <div class="flex items-center justify-between gap-4 bg-[#00aeef] px-5 py-4">
+                <h2 class="m-0 text-lg font-black text-white">
+                  Other Accessories For This Model
+                </h2>
+
+                @if (showRelatedSliderControls()) {
+                  <div class="flex items-center gap-2">
+                    <button
+                      type="button"
+                      class="grid h-9 w-9 place-items-center rounded-full bg-white text-[#00aeef] transition hover:bg-[#fff4dc] disabled:cursor-not-allowed disabled:opacity-45"
+                      [disabled]="!canSlideRelatedPrevious()"
+                      aria-label="Previous related products"
+                      (click)="slideRelatedPrevious()"
+                    >
+                      <fa-icon [icon]="faChevronLeft"></fa-icon>
+                    </button>
+                    <button
+                      type="button"
+                      class="grid h-9 w-9 place-items-center rounded-full bg-white text-[#00aeef] transition hover:bg-[#fff4dc] disabled:cursor-not-allowed disabled:opacity-45"
+                      [disabled]="!canSlideRelatedNext()"
+                      aria-label="Next related products"
+                      (click)="slideRelatedNext()"
+                    >
+                      <fa-icon [icon]="faChevronRight"></fa-icon>
+                    </button>
+                  </div>
+                }
+              </div>
+
+              <div class="border border-t-0 border-[#d7f3ff] bg-[#f4fbff] p-5">
+                <div #relatedSlider class="related-slider">
+                  <div class="related-slider-track">
+                    @for (item of relatedProducts(); track item.id) {
+                    <a
+                      [routerLink]="['/products', item.slug]"
+                      class="related-slider-card flex min-h-[285px] flex-col border border-slate-200 bg-white text-center text-inherit no-underline transition hover:shadow-[0_16px_30px_rgba(15,23,42,0.12)]"
+                    >
+                      <div class="flex h-44 items-center justify-center p-4">
+                        <img class="max-h-36 w-full object-contain" [src]="getProductImage(item)" [alt]="item.name" loading="lazy" decoding="async" />
+                      </div>
+                      <div class="flex flex-1 flex-col justify-between border-t border-slate-100 p-3">
+                        <h3 class="line-clamp-3 text-sm font-semibold leading-5 text-[#343844]">{{ item.name }}</h3>
+                        <p class="mt-3 text-base font-black text-red-600">{{ getProductPrice(item) }}</p>
+                      </div>
+                    </a>
+                    }
+                  </div>
+                </div>
+              </div>
+            </section>
+          }
+        </main>
+      </div>
+    }
+  </div>
+</section>

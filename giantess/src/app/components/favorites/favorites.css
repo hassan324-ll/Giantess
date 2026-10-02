@@ -1,0 +1,11 @@
+:host {
+  display: block;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  aside,
+  .transition {
+    transition: none !important;
+  }
+}

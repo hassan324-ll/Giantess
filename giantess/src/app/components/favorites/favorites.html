@@ -1,0 +1,88 @@
+<div class="pointer-events-none fixed inset-0 z-[55]" aria-hidden="true">
+  <div
+    [ngClass]="{ 'pointer-events-auto': isOpen(), 'opacity-100': isOpen() }"
+    class="absolute inset-0 bg-[rgba(17,24,39,0.38)] opacity-0 transition duration-300"
+    (click)="close()"
+  ></div>
+</div>
+
+<aside
+  [ngClass]="{ 'translate-x-0': isOpen(), 'translate-x-full': !isOpen() }"
+  class="fixed right-0 top-0 z-[56] h-screen w-[min(520px,92vw)] transition-transform duration-300"
+  aria-label="Favorites sidebar"
+  role="dialog"
+  aria-modal="true"
+>
+  <div class="h-full overflow-y-auto rounded-l-[26px] border border-[rgba(30,99,218,0.14)] bg-[linear-gradient(180deg,#ffffff_0%,#f7fbff_100%)] shadow-[0_30px_90px_rgba(15,23,42,0.18)]">
+    <div class="sticky top-0 z-10 flex items-center justify-between border-b border-[rgba(30,99,218,0.12)] bg-white/80 px-6 py-5 backdrop-blur">
+      <div class="flex items-center gap-3">
+        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-[linear-gradient(135deg,#1e63da_0%,#1fb4d9_100%)] text-white shadow-[0_16px_30px_rgba(30,99,218,0.18)]">
+          <fa-icon [icon]="faHeart"></fa-icon>
+        </span>
+        <div>
+          <p class="m-0 text-[1.05rem] font-extrabold leading-tight text-[#142a46]">Favorites</p>
+          <p class="m-0 text-[0.92rem] font-semibold leading-tight text-[#5b6b7e]">
+            {{ itemCount() }} saved item{{ itemCount() === 1 ? '' : 's' }}
+          </p>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="grid h-11 w-11 place-items-center rounded-2xl border border-[rgba(215,223,239,0.9)] bg-white text-[#273041] transition hover:-translate-y-px hover:border-[rgba(30,99,218,0.22)] hover:text-[#1e63da]"
+        aria-label="Close favorites"
+        (click)="close()"
+      >
+        <fa-icon [icon]="faCircleXmark"></fa-icon>
+      </button>
+    </div>
+
+    <div class="px-6 py-6">
+      @if (!items().length) {
+        <div class="rounded-3xl border border-dashed border-[rgba(30,99,218,0.18)] bg-[rgba(30,99,218,0.04)] p-6 text-center">
+          <div class="mx-auto mb-3 grid h-14 w-14 place-items-center rounded-2xl bg-white">
+            <fa-icon [icon]="faHeart" class="text-[#1e63da]"></fa-icon>
+          </div>
+          <p class="m-0 text-[1.03rem] font-extrabold text-[#142a46]">No favorites yet</p>
+          <p class="m-0 mt-2 text-[0.95rem] font-semibold text-[#5b6b7e]">
+            Tap the heart on a product to save it here.
+          </p>
+        </div>
+      } @else {
+        <div class="grid gap-4">
+          @for (product of items(); track product.id) {
+            <div class="flex items-start gap-4 rounded-3xl border border-[#d7dfef] bg-white p-4 shadow-sm">
+              <a
+                class="grid h-20 w-20 flex-none place-items-center rounded-2xl bg-[rgba(30,99,218,0.06)]"
+                [routerLink]="['/products', product.slug]"
+                (click)="close()"
+              >
+                <img
+                  class="max-h-16 w-full object-contain"
+                  [src]="product.image_url || 'product-image.webp'"
+                  [alt]="product.name"
+                />
+              </a>
+              <div class="min-w-0 flex-1">
+                <p class="m-0 line-clamp-2 text-[0.98rem] font-extrabold leading-5 text-[#142a46]">
+                  {{ product.name }}
+                </p>
+                <p class="m-0 mt-1 text-[0.9rem] font-semibold text-[#5b6b7e]">
+                  {{ product.part_number || product.sku || 'Saved product' }}
+                </p>
+              </div>
+              <button
+                type="button"
+                class="grid h-10 w-10 flex-none place-items-center rounded-xl border border-[#d7dfef] bg-white text-[#273041] transition hover:-translate-y-px hover:text-[#e11d48]"
+                aria-label="Remove favorite"
+                (click)="removeItem(product.id)"
+              >
+                <fa-icon [icon]="faTrash"></fa-icon>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</aside>

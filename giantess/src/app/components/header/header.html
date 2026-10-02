@@ -1,0 +1,265 @@
+<div class="relative z-20">
+  <header
+    class="border-b border-[rgba(8,180,220,0.14)] bg-[linear-gradient(180deg,#ffffff_0%,#f2fbff_100%)] shadow-[0_18px_40px_rgba(8,125,167,0.08)]"
+  >
+    <div
+      class="mx-auto grid w-[min(1240px,calc(100%-32px))] grid-cols-[auto_minmax(220px,1fr)_auto_auto] items-center gap-[18px] py-4 pb-[14px] max-[1140px]:grid-cols-[auto_minmax(240px,1fr)_auto] max-[920px]:grid-cols-[auto_auto_1fr_auto] max-[920px]:gap-[14px] max-[760px]:w-[min(1240px,calc(100%-20px))] max-[760px]:grid-cols-[auto_1fr_auto] max-[760px]:py-3"
+    >
+      <button
+        type="button"
+        class="hidden h-12 w-12 place-items-center rounded-2xl bg-[#fff4dc] text-[1.1rem] text-[#087da7] max-[920px]:grid"
+        aria-label="Toggle categories menu"
+        (click)="toggleSidebar()"
+      >
+        <fa-icon [icon]="faBars"></fa-icon>
+      </button>
+
+      <a class="inline-flex min-w-0 items-center" href="/" aria-label="Go to homepage">
+        <img [src]="logoPath" alt="Site logo" class="h-11 w-auto object-contain max-[760px]:h-[38px]" />
+      </a>
+
+      <form
+        class="flex min-h-14 items-center overflow-hidden rounded-full border border-[#d7dfef] bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] max-[760px]:order-10 max-[760px]:col-span-full"
+        role="search"
+        (submit)="submitSearch($event, searchInput.value)"
+      >
+        <input
+          #searchInput
+          type="search"
+          name="q"
+          [placeholder]="searchPlaceholder"
+          aria-label="Search for products"
+          class="h-full min-w-0 flex-1 border-0 bg-transparent px-[22px] text-[0.98rem] text-[#273041] outline-none placeholder:text-slate-400"
+        />
+        <button
+          type="submit"
+          aria-label="Search"
+          class="grid h-14 w-14 flex-none place-items-center bg-[#08b4dc] text-white"
+        >
+          <fa-icon [icon]="faMagnifyingGlass"></fa-icon>
+        </button>
+      </form>
+
+      <div
+        class="flex items-center gap-[18px] max-[1140px]:col-[2/4] max-[1140px]:justify-end max-[920px]:hidden"
+      >
+        <nav class="flex items-center gap-4 border-r border-[#d7dfef] pr-1" aria-label="Utility">
+          @for (link of utilityLinks; track link.label) {
+            <a class="whitespace-nowrap text-sm font-bold text-[#102033] no-underline transition hover:text-[#087da7]" [routerLink]="link.route">
+              {{ link.label }}
+            </a>
+          }
+        </nav>
+
+        <div class="flex items-center gap-3 text-[#102033]">
+          <span
+            class="grid h-[46px] w-[46px] place-items-center rounded-full bg-[#fff4dc] text-[1.2rem] text-[#087da7]"
+          >
+            <fa-icon [icon]="faHeadset"></fa-icon>
+          </span>
+          <div>
+            <p class="m-0 text-[0.98rem] font-bold leading-[1.2]">B2B Support</p>
+            <a class="m-0 text-[0.95rem] leading-[1.2] text-[#087da7] no-underline" href="mailto:jasmine@giantess-cn.com"
+              >   info@giantess-cn.com</a
+            >
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 text-[#102033]">
+          <span
+            class="grid h-[46px] w-[46px] place-items-center rounded-full bg-[#fff4dc] text-[1.2rem] text-[#087da7]"
+          >
+            <fa-icon [icon]="faGlobe"></fa-icon>
+          </span>
+          <div>
+            <p class="m-0 text-[0.98rem] font-bold leading-[1.2]">Worldwide</p>
+            <span class="m-0 text-[0.95rem] leading-[1.2] text-[#087da7]">B2B Sourcing</span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex items-center gap-[10px] max-[1140px]:justify-self-end max-[760px]:gap-2"
+        aria-label="Header actions"
+      >
+        <a
+          routerLink="/contact"
+          class="flex h-12 items-center rounded-full bg-[#f7b640] px-5 text-sm font-black text-[#102033] no-underline shadow-[0_14px_28px_rgba(247,182,64,0.28)] transition hover:-translate-y-px hover:bg-[#eaa72f] max-[760px]:h-[42px] max-[760px]:px-4"
+        >
+          Request Quote
+        </a>
+      </div>
+    </div>
+
+    <div
+      class="relative mx-auto w-[min(1240px,calc(100%-32px))] border-t border-[rgba(8,180,220,0.14)] max-[920px]:hidden"
+      (mouseleave)="scheduleMegaMenuClose()"
+    >
+      <nav class="header-brand-nav flex min-h-[68px] items-stretch gap-1" aria-label="Brand categories">
+        <button
+          type="button"
+          class="header-brand-nav__categories my-3 flex flex-none items-center gap-3 whitespace-nowrap rounded-full bg-[#08b4dc] px-[18px] py-[10px] font-bold text-white shadow-[0_14px_28px_rgba(8,180,220,0.22)] transition hover:-translate-y-px hover:bg-[#087da7]"
+          aria-label="Toggle categories menu"
+          [attr.aria-expanded]="isSidebarOpen()"
+          (click)="closeMegaMenu(); toggleSidebar()"
+        >
+          <span class="grid h-[30px] w-[30px] place-items-center rounded-full bg-[rgba(255,255,255,0.16)]">
+            <fa-icon [icon]="faBars"></fa-icon>
+          </span>
+          <span>Categories</span>
+        </button>
+
+        @for (category of categories(); track category.id) {
+          <button
+            type="button"
+            class="header-nav__link flex min-w-0 flex-1 items-center justify-center px-4 text-center text-[clamp(0.9rem,1.1vw,1.05rem)] font-semibold leading-6 transition"
+            [ngClass]="{ 'header-nav__link--active': activeMegaCategoryId() === category.id && isMegaMenuOpen() }"
+            [attr.aria-expanded]="activeMegaCategoryId() === category.id && isMegaMenuOpen()"
+            (mouseenter)="keepMegaMenuOpen(category.id)"
+            (focus)="keepMegaMenuOpen(category.id)"
+            (click)="toggleMegaMenu(category.id)"
+          >
+            {{ category.name }}
+          </button>
+        }
+      </nav>
+
+      @if (isMegaMenuOpen()) {
+        <div
+          class="header-mega-menu"
+          (mouseenter)="keepMegaMenuOpen(activeMegaCategoryId())"
+          (mouseleave)="scheduleMegaMenuClose()"
+        >
+          <div
+            class="header-mega-menu__inner mx-auto grid w-[min(1240px,calc(100%-48px))] grid-cols-4 gap-8 px-5 py-7"
+            [ngClass]="{
+              'header-mega-menu__inner--dense':
+                activeMegaCategoryId() === 'honeywall' ||
+                activeMegaCategoryId() === 'datalogic' ||
+                activeMegaCategoryId() === 'intermec' ||
+                activeMegaCategoryId() === 'urovo' ||
+                activeMegaCategoryId() === 'tsc-bluebird' ||
+                activeMegaCategoryId() === 'zenove-accessory' ||
+                activeMegaCategoryId() === 'other-brands'
+            }"
+          >
+            @for (section of activeMegaCategory().sections; track section.slug) {
+              <section
+                class="header-mega-menu__section"
+                [ngClass]="getMegaSectionClass(section)"
+              >
+                <h3 class="header-mega-menu__section-title">{{ section.title }}</h3>
+                <ul
+                  class="header-mega-menu__items mt-3 grid gap-3"
+                  [ngClass]="getMegaItemsClass(section)"
+                >
+                  @for (item of section.items; track item.slug) {
+                    <li>
+                      <a
+                        class="header-mega-menu__item"
+                        [routerLink]="['/brands', activeMegaCategoryId(), 'categories', section.slug, 'models', item.slug, 'products']"
+                        (click)="closeMegaMenu()"
+                      >
+                        {{ item.name }}
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </section>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </header>
+
+  <div
+    class="pointer-events-none fixed inset-0 z-[29] bg-[rgba(17,24,39,0.38)] opacity-0 transition"
+    [class.pointer-events-auto]="isSidebarOpen()"
+    [class.opacity-100]="isSidebarOpen()"
+    (click)="closeSidebar()"
+    aria-hidden="true"
+  ></div>
+
+  <aside
+    class="fixed left-0 top-0 z-30 grid h-screen w-[min(860px,calc(100vw-16px))] -translate-x-[102%] grid-cols-[minmax(280px,360px)_minmax(260px,1fr)] bg-white shadow-[20px_0_60px_rgba(15,23,42,0.18)] transition duration-300 max-[760px]:w-screen max-[760px]:grid-cols-1"
+    [class.translate-x-0]="isSidebarOpen()"
+  >
+    <div class="overflow-y-auto border-r border-[#d7dfef] bg-[linear-gradient(180deg,#ffffff_0%,#f2fbff_100%)] p-6 max-[760px]:border-b max-[760px]:border-r-0">
+      <button
+        type="button"
+        class="mb-[22px] flex w-full items-center justify-start gap-3 rounded-full bg-[#08b4dc] px-[18px] py-[10px] font-bold text-white shadow-[0_14px_28px_rgba(8,180,220,0.22)]"
+        (click)="closeSidebar()"
+      >
+        <span class="grid h-[30px] w-[30px] place-items-center rounded-full bg-[rgba(255,255,255,0.16)]">
+          <fa-icon [icon]="faBars"></fa-icon>
+        </span>
+        <span>All Categories</span>
+      </button>
+
+      <nav class="mb-5 grid grid-cols-2 gap-2" aria-label="Utility links">
+        @for (link of utilityLinks; track link.label) {
+          <a
+            class="rounded-full border border-[#d7dfef] bg-white px-4 py-2 text-center text-sm font-bold text-[#102033] no-underline"
+            [routerLink]="link.route"
+            (click)="closeSidebar()"
+          >
+            {{ link.label }}
+          </a>
+        }
+      </nav>
+
+      <div class="grid gap-2.5">
+        @for (category of categories(); track category.id) {
+          <button
+            type="button"
+            class="flex w-full items-center justify-between rounded-2xl border border-transparent bg-white px-[14px] py-4 text-[#102033] transition hover:-translate-y-px"
+            [ngClass]="
+              activeCategoryId() === category.id
+                ? 'border-[rgba(8,180,220,0.22)] bg-[#fff4dc] text-[#087da7]'
+                : ''
+            "
+            (click)="setActiveCategory(category.id)"
+          >
+            <span class="flex items-center text-left font-bold">
+              <span>{{ category.name }}</span>
+            </span>
+            <fa-icon [icon]="faChevronRight"></fa-icon>
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="header-sidebar-models overflow-y-auto bg-white p-6">
+      <div class="mb-[18px] bg-[#08b4dc] px-4 py-[14px] font-extrabold tracking-[0.02em] text-white">
+        {{ activeCategory().name }}
+      </div>
+
+      <div class="grid gap-5 sm:grid-cols-2">
+        @for (section of activeCategory().sections; track section.slug) {
+          <section class="rounded-2xl border border-[#e9eef7] bg-[#fbfdff] p-4">
+            <h3 class="m-0 border-b border-[rgba(247,182,64,0.42)] pb-3 text-[0.82rem] font-black text-[#087da7]">
+              {{ section.title }}
+            </h3>
+
+            @if (section.items.length) {
+              <ul class="mt-3 grid gap-1">
+                @for (item of section.items; track item.slug) {
+                  <li>
+                    <a
+                      class="flex rounded-xl px-2 py-1.5 text-[0.78rem] font-bold leading-4 text-[#202a34] no-underline transition hover:translate-x-0.5 hover:bg-[#fff4dc] hover:text-[#087da7]"
+                      [routerLink]="['/brands', activeCategory().id, 'categories', section.slug, 'models', item.slug, 'products']"
+                      (click)="closeSidebar()"
+                    >
+                      {{ item.name }}
+                    </a>
+                  </li>
+                }
+              </ul>
+            }
+          </section>
+        }
+      </div>
+    </div>
+  </aside>
+</div>

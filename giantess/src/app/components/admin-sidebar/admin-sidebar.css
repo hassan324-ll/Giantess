@@ -1,0 +1,160 @@
+.admin-sidebar {
+  width: 260px;
+  height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 38%),
+    linear-gradient(180deg, #1e63da 0%, #1748ad 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  box-shadow: 12px 0 32px rgba(15, 23, 42, 0.18);
+  z-index: 1000;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.sidebar-header {
+  flex: 0 0 auto;
+  padding: 22px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-logo {
+  width: 80px;
+  height: 40px;
+  object-fit: contain;
+  margin: 0 auto;
+  /* filter: brightness(0) invert(1); */
+
+}
+
+.sidebar-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.sidebar-nav {
+  flex: 1;
+  min-height: 0;
+  padding: 14px 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.36) transparent;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  margin: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 42px;
+  padding: 10px 12px;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+  border-radius: 10px;
+  border-left: 0;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: white;
+  transform: translateX(2px);
+}
+
+.nav-link.active {
+  background-color: #ffffff;
+  color: #1748ad;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.nav-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.sidebar-footer {
+  flex: 0 0 auto;
+  padding: 14px 16px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 42px;
+  padding: 10px 12px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: 10px;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.logout-btn:hover {
+  background-color: rgba(254, 226, 226, 0.16);
+  color: #fecaca;
+}
+
+/* Scrollbar styling */
+.admin-sidebar::-webkit-scrollbar,
+.sidebar-nav::-webkit-scrollbar {
+  width: 10px;
+}
+
+.admin-sidebar::-webkit-scrollbar-track,
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb,
+.sidebar-nav::-webkit-scrollbar-thumb {
+  min-height: 56px;
+  background: rgba(255, 255, 255, 0.34);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+  border-radius: 999px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb:hover,
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.52);
+  background-clip: padding-box;
+}
